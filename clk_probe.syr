@@ -124,39 +124,21 @@ Elaborating module <clk_probe>.
 Synthesizing Unit <clk_probe>.
     Related source file is "/home/andy/verilog_workspace/assume_board_is_nexys3/index.v".
         PIN_COUNT = 225
-    Found 225-bit register for signal <pin_sync0>.
-    Found 225-bit register for signal <pin_sync1>.
-    Found 8-bit register for signal <por_cnt>.
-    Found 1-bit register for signal <por_done>.
-    Found 1-bit register for signal <match_latched>.
-    Found 30-bit register for signal <high_cnt>.
     Found 32-bit register for signal <cnt>.
-    Found 32-bit adder for signal <cnt[31]_GND_1_o_add_2_OUT> created at line 27.
-    Found 8-bit adder for signal <por_cnt[7]_GND_1_o_add_5_OUT> created at line 35.
-    Found 30-bit adder for signal <high_cnt[29]_GND_1_o_add_8_OUT> created at line 44.
-    Found 30-bit comparator greater for signal <high_cnt[29]_PWR_1_o_LessThan_8_o> created at line 43
+    Found 32-bit adder for signal <cnt[31]_GND_1_o_add_1_OUT> created at line 12.
     Summary:
-	inferred   3 Adder/Subtractor(s).
-	inferred 522 D-type flip-flop(s).
-	inferred   1 Comparator(s).
+	inferred   1 Adder/Subtractor(s).
+	inferred  32 D-type flip-flop(s).
 Unit <clk_probe> synthesized.
 
 =========================================================================
 HDL Synthesis Report
 
 Macro Statistics
-# Adders/Subtractors                                   : 3
- 30-bit adder                                          : 1
+# Adders/Subtractors                                   : 1
  32-bit adder                                          : 1
- 8-bit adder                                           : 1
-# Registers                                            : 7
- 1-bit register                                        : 2
- 225-bit register                                      : 2
- 30-bit register                                       : 1
+# Registers                                            : 1
  32-bit register                                       : 1
- 8-bit register                                        : 1
-# Comparators                                          : 1
- 30-bit comparator greater                             : 1
 
 =========================================================================
 
@@ -167,22 +149,14 @@ Macro Statistics
 
 Synthesizing (advanced) Unit <clk_probe>.
 The following registers are absorbed into counter <cnt>: 1 register on signal <cnt>.
-The following registers are absorbed into counter <por_cnt>: 1 register on signal <por_cnt>.
-The following registers are absorbed into counter <high_cnt>: 1 register on signal <high_cnt>.
 Unit <clk_probe> synthesized (advanced).
 
 =========================================================================
 Advanced HDL Synthesis Report
 
 Macro Statistics
-# Counters                                             : 3
- 30-bit up counter                                     : 1
+# Counters                                             : 1
  32-bit up counter                                     : 1
- 8-bit up counter                                      : 1
-# Registers                                            : 452
- Flip-Flops                                            : 452
-# Comparators                                          : 1
- 30-bit comparator greater                             : 1
 
 =========================================================================
 
@@ -198,246 +172,16 @@ Optimizing unit <clk_probe> ...
 
 Mapping all equations...
 Building and optimizing final netlist ...
-Found area constraint ratio of 100 (+ 5) on block clk_probe, actual ratio is 8.
+Found area constraint ratio of 100 (+ 5) on block clk_probe, actual ratio is 0.
 
 Final Macro Processing ...
-
-Processing Unit <clk_probe> :
-	Found 2-bit shift register for signal <pin_sync1_0>.
-	Found 2-bit shift register for signal <pin_sync1_1>.
-	Found 2-bit shift register for signal <pin_sync1_2>.
-	Found 2-bit shift register for signal <pin_sync1_3>.
-	Found 2-bit shift register for signal <pin_sync1_4>.
-	Found 2-bit shift register for signal <pin_sync1_5>.
-	Found 2-bit shift register for signal <pin_sync1_6>.
-	Found 2-bit shift register for signal <pin_sync1_7>.
-	Found 2-bit shift register for signal <pin_sync1_8>.
-	Found 2-bit shift register for signal <pin_sync1_9>.
-	Found 2-bit shift register for signal <pin_sync1_10>.
-	Found 2-bit shift register for signal <pin_sync1_11>.
-	Found 2-bit shift register for signal <pin_sync1_12>.
-	Found 2-bit shift register for signal <pin_sync1_13>.
-	Found 2-bit shift register for signal <pin_sync1_14>.
-	Found 2-bit shift register for signal <pin_sync1_15>.
-	Found 2-bit shift register for signal <pin_sync1_16>.
-	Found 2-bit shift register for signal <pin_sync1_17>.
-	Found 2-bit shift register for signal <pin_sync1_18>.
-	Found 2-bit shift register for signal <pin_sync1_19>.
-	Found 2-bit shift register for signal <pin_sync1_20>.
-	Found 2-bit shift register for signal <pin_sync1_21>.
-	Found 2-bit shift register for signal <pin_sync1_22>.
-	Found 2-bit shift register for signal <pin_sync1_23>.
-	Found 2-bit shift register for signal <pin_sync1_24>.
-	Found 2-bit shift register for signal <pin_sync1_25>.
-	Found 2-bit shift register for signal <pin_sync1_26>.
-	Found 2-bit shift register for signal <pin_sync1_27>.
-	Found 2-bit shift register for signal <pin_sync1_28>.
-	Found 2-bit shift register for signal <pin_sync1_29>.
-	Found 2-bit shift register for signal <pin_sync1_30>.
-	Found 2-bit shift register for signal <pin_sync1_31>.
-	Found 2-bit shift register for signal <pin_sync1_32>.
-	Found 2-bit shift register for signal <pin_sync1_33>.
-	Found 2-bit shift register for signal <pin_sync1_34>.
-	Found 2-bit shift register for signal <pin_sync1_35>.
-	Found 2-bit shift register for signal <pin_sync1_36>.
-	Found 2-bit shift register for signal <pin_sync1_37>.
-	Found 2-bit shift register for signal <pin_sync1_38>.
-	Found 2-bit shift register for signal <pin_sync1_39>.
-	Found 2-bit shift register for signal <pin_sync1_40>.
-	Found 2-bit shift register for signal <pin_sync1_41>.
-	Found 2-bit shift register for signal <pin_sync1_42>.
-	Found 2-bit shift register for signal <pin_sync1_43>.
-	Found 2-bit shift register for signal <pin_sync1_44>.
-	Found 2-bit shift register for signal <pin_sync1_45>.
-	Found 2-bit shift register for signal <pin_sync1_46>.
-	Found 2-bit shift register for signal <pin_sync1_47>.
-	Found 2-bit shift register for signal <pin_sync1_48>.
-	Found 2-bit shift register for signal <pin_sync1_49>.
-	Found 2-bit shift register for signal <pin_sync1_50>.
-	Found 2-bit shift register for signal <pin_sync1_51>.
-	Found 2-bit shift register for signal <pin_sync1_52>.
-	Found 2-bit shift register for signal <pin_sync1_53>.
-	Found 2-bit shift register for signal <pin_sync1_54>.
-	Found 2-bit shift register for signal <pin_sync1_55>.
-	Found 2-bit shift register for signal <pin_sync1_56>.
-	Found 2-bit shift register for signal <pin_sync1_57>.
-	Found 2-bit shift register for signal <pin_sync1_58>.
-	Found 2-bit shift register for signal <pin_sync1_59>.
-	Found 2-bit shift register for signal <pin_sync1_60>.
-	Found 2-bit shift register for signal <pin_sync1_61>.
-	Found 2-bit shift register for signal <pin_sync1_62>.
-	Found 2-bit shift register for signal <pin_sync1_63>.
-	Found 2-bit shift register for signal <pin_sync1_64>.
-	Found 2-bit shift register for signal <pin_sync1_65>.
-	Found 2-bit shift register for signal <pin_sync1_66>.
-	Found 2-bit shift register for signal <pin_sync1_67>.
-	Found 2-bit shift register for signal <pin_sync1_68>.
-	Found 2-bit shift register for signal <pin_sync1_69>.
-	Found 2-bit shift register for signal <pin_sync1_70>.
-	Found 2-bit shift register for signal <pin_sync1_71>.
-	Found 2-bit shift register for signal <pin_sync1_72>.
-	Found 2-bit shift register for signal <pin_sync1_73>.
-	Found 2-bit shift register for signal <pin_sync1_74>.
-	Found 2-bit shift register for signal <pin_sync1_75>.
-	Found 2-bit shift register for signal <pin_sync1_76>.
-	Found 2-bit shift register for signal <pin_sync1_77>.
-	Found 2-bit shift register for signal <pin_sync1_78>.
-	Found 2-bit shift register for signal <pin_sync1_79>.
-	Found 2-bit shift register for signal <pin_sync1_80>.
-	Found 2-bit shift register for signal <pin_sync1_81>.
-	Found 2-bit shift register for signal <pin_sync1_82>.
-	Found 2-bit shift register for signal <pin_sync1_83>.
-	Found 2-bit shift register for signal <pin_sync1_84>.
-	Found 2-bit shift register for signal <pin_sync1_85>.
-	Found 2-bit shift register for signal <pin_sync1_86>.
-	Found 2-bit shift register for signal <pin_sync1_87>.
-	Found 2-bit shift register for signal <pin_sync1_88>.
-	Found 2-bit shift register for signal <pin_sync1_89>.
-	Found 2-bit shift register for signal <pin_sync1_90>.
-	Found 2-bit shift register for signal <pin_sync1_91>.
-	Found 2-bit shift register for signal <pin_sync1_92>.
-	Found 2-bit shift register for signal <pin_sync1_93>.
-	Found 2-bit shift register for signal <pin_sync1_94>.
-	Found 2-bit shift register for signal <pin_sync1_95>.
-	Found 2-bit shift register for signal <pin_sync1_96>.
-	Found 2-bit shift register for signal <pin_sync1_97>.
-	Found 2-bit shift register for signal <pin_sync1_98>.
-	Found 2-bit shift register for signal <pin_sync1_99>.
-	Found 2-bit shift register for signal <pin_sync1_100>.
-	Found 2-bit shift register for signal <pin_sync1_101>.
-	Found 2-bit shift register for signal <pin_sync1_102>.
-	Found 2-bit shift register for signal <pin_sync1_103>.
-	Found 2-bit shift register for signal <pin_sync1_104>.
-	Found 2-bit shift register for signal <pin_sync1_105>.
-	Found 2-bit shift register for signal <pin_sync1_106>.
-	Found 2-bit shift register for signal <pin_sync1_107>.
-	Found 2-bit shift register for signal <pin_sync1_108>.
-	Found 2-bit shift register for signal <pin_sync1_109>.
-	Found 2-bit shift register for signal <pin_sync1_110>.
-	Found 2-bit shift register for signal <pin_sync1_111>.
-	Found 2-bit shift register for signal <pin_sync1_112>.
-	Found 2-bit shift register for signal <pin_sync1_113>.
-	Found 2-bit shift register for signal <pin_sync1_114>.
-	Found 2-bit shift register for signal <pin_sync1_115>.
-	Found 2-bit shift register for signal <pin_sync1_116>.
-	Found 2-bit shift register for signal <pin_sync1_117>.
-	Found 2-bit shift register for signal <pin_sync1_118>.
-	Found 2-bit shift register for signal <pin_sync1_119>.
-	Found 2-bit shift register for signal <pin_sync1_120>.
-	Found 2-bit shift register for signal <pin_sync1_121>.
-	Found 2-bit shift register for signal <pin_sync1_122>.
-	Found 2-bit shift register for signal <pin_sync1_123>.
-	Found 2-bit shift register for signal <pin_sync1_124>.
-	Found 2-bit shift register for signal <pin_sync1_125>.
-	Found 2-bit shift register for signal <pin_sync1_126>.
-	Found 2-bit shift register for signal <pin_sync1_127>.
-	Found 2-bit shift register for signal <pin_sync1_128>.
-	Found 2-bit shift register for signal <pin_sync1_129>.
-	Found 2-bit shift register for signal <pin_sync1_130>.
-	Found 2-bit shift register for signal <pin_sync1_131>.
-	Found 2-bit shift register for signal <pin_sync1_132>.
-	Found 2-bit shift register for signal <pin_sync1_133>.
-	Found 2-bit shift register for signal <pin_sync1_134>.
-	Found 2-bit shift register for signal <pin_sync1_135>.
-	Found 2-bit shift register for signal <pin_sync1_136>.
-	Found 2-bit shift register for signal <pin_sync1_137>.
-	Found 2-bit shift register for signal <pin_sync1_138>.
-	Found 2-bit shift register for signal <pin_sync1_139>.
-	Found 2-bit shift register for signal <pin_sync1_140>.
-	Found 2-bit shift register for signal <pin_sync1_141>.
-	Found 2-bit shift register for signal <pin_sync1_142>.
-	Found 2-bit shift register for signal <pin_sync1_143>.
-	Found 2-bit shift register for signal <pin_sync1_144>.
-	Found 2-bit shift register for signal <pin_sync1_145>.
-	Found 2-bit shift register for signal <pin_sync1_146>.
-	Found 2-bit shift register for signal <pin_sync1_147>.
-	Found 2-bit shift register for signal <pin_sync1_148>.
-	Found 2-bit shift register for signal <pin_sync1_149>.
-	Found 2-bit shift register for signal <pin_sync1_150>.
-	Found 2-bit shift register for signal <pin_sync1_151>.
-	Found 2-bit shift register for signal <pin_sync1_152>.
-	Found 2-bit shift register for signal <pin_sync1_153>.
-	Found 2-bit shift register for signal <pin_sync1_154>.
-	Found 2-bit shift register for signal <pin_sync1_155>.
-	Found 2-bit shift register for signal <pin_sync1_156>.
-	Found 2-bit shift register for signal <pin_sync1_157>.
-	Found 2-bit shift register for signal <pin_sync1_158>.
-	Found 2-bit shift register for signal <pin_sync1_159>.
-	Found 2-bit shift register for signal <pin_sync1_160>.
-	Found 2-bit shift register for signal <pin_sync1_161>.
-	Found 2-bit shift register for signal <pin_sync1_162>.
-	Found 2-bit shift register for signal <pin_sync1_163>.
-	Found 2-bit shift register for signal <pin_sync1_164>.
-	Found 2-bit shift register for signal <pin_sync1_165>.
-	Found 2-bit shift register for signal <pin_sync1_166>.
-	Found 2-bit shift register for signal <pin_sync1_167>.
-	Found 2-bit shift register for signal <pin_sync1_168>.
-	Found 2-bit shift register for signal <pin_sync1_169>.
-	Found 2-bit shift register for signal <pin_sync1_170>.
-	Found 2-bit shift register for signal <pin_sync1_171>.
-	Found 2-bit shift register for signal <pin_sync1_172>.
-	Found 2-bit shift register for signal <pin_sync1_173>.
-	Found 2-bit shift register for signal <pin_sync1_174>.
-	Found 2-bit shift register for signal <pin_sync1_175>.
-	Found 2-bit shift register for signal <pin_sync1_176>.
-	Found 2-bit shift register for signal <pin_sync1_177>.
-	Found 2-bit shift register for signal <pin_sync1_178>.
-	Found 2-bit shift register for signal <pin_sync1_179>.
-	Found 2-bit shift register for signal <pin_sync1_180>.
-	Found 2-bit shift register for signal <pin_sync1_181>.
-	Found 2-bit shift register for signal <pin_sync1_182>.
-	Found 2-bit shift register for signal <pin_sync1_183>.
-	Found 2-bit shift register for signal <pin_sync1_184>.
-	Found 2-bit shift register for signal <pin_sync1_185>.
-	Found 2-bit shift register for signal <pin_sync1_186>.
-	Found 2-bit shift register for signal <pin_sync1_187>.
-	Found 2-bit shift register for signal <pin_sync1_188>.
-	Found 2-bit shift register for signal <pin_sync1_189>.
-	Found 2-bit shift register for signal <pin_sync1_190>.
-	Found 2-bit shift register for signal <pin_sync1_191>.
-	Found 2-bit shift register for signal <pin_sync1_192>.
-	Found 2-bit shift register for signal <pin_sync1_193>.
-	Found 2-bit shift register for signal <pin_sync1_194>.
-	Found 2-bit shift register for signal <pin_sync1_195>.
-	Found 2-bit shift register for signal <pin_sync1_196>.
-	Found 2-bit shift register for signal <pin_sync1_197>.
-	Found 2-bit shift register for signal <pin_sync1_198>.
-	Found 2-bit shift register for signal <pin_sync1_199>.
-	Found 2-bit shift register for signal <pin_sync1_200>.
-	Found 2-bit shift register for signal <pin_sync1_201>.
-	Found 2-bit shift register for signal <pin_sync1_202>.
-	Found 2-bit shift register for signal <pin_sync1_203>.
-	Found 2-bit shift register for signal <pin_sync1_204>.
-	Found 2-bit shift register for signal <pin_sync1_205>.
-	Found 2-bit shift register for signal <pin_sync1_206>.
-	Found 2-bit shift register for signal <pin_sync1_207>.
-	Found 2-bit shift register for signal <pin_sync1_208>.
-	Found 2-bit shift register for signal <pin_sync1_209>.
-	Found 2-bit shift register for signal <pin_sync1_210>.
-	Found 2-bit shift register for signal <pin_sync1_211>.
-	Found 2-bit shift register for signal <pin_sync1_212>.
-	Found 2-bit shift register for signal <pin_sync1_213>.
-	Found 2-bit shift register for signal <pin_sync1_214>.
-	Found 2-bit shift register for signal <pin_sync1_215>.
-	Found 2-bit shift register for signal <pin_sync1_216>.
-	Found 2-bit shift register for signal <pin_sync1_217>.
-	Found 2-bit shift register for signal <pin_sync1_218>.
-	Found 2-bit shift register for signal <pin_sync1_219>.
-	Found 2-bit shift register for signal <pin_sync1_220>.
-	Found 2-bit shift register for signal <pin_sync1_221>.
-	Found 2-bit shift register for signal <pin_sync1_222>.
-	Found 2-bit shift register for signal <pin_sync1_223>.
-	Found 2-bit shift register for signal <pin_sync1_224>.
-Unit <clk_probe> processed.
 
 =========================================================================
 Final Register Report
 
 Macro Statistics
-# Registers                                            : 68
- Flip-Flops                                            : 68
-# Shift Registers                                      : 225
- 2-bit shift register                                  : 225
+# Registers                                            : 28
+ Flip-Flops                                            : 28
 
 =========================================================================
 
@@ -460,29 +204,19 @@ Top Level Output File Name         : clk_probe.ngc
 
 Primitive and Black Box Usage:
 ------------------------------
-# BELS                             : 332
+# BELS                             : 85
 #      GND                         : 1
-#      INV                         : 5
-#      LUT1                        : 63
-#      LUT2                        : 1
-#      LUT3                        : 1
-#      LUT4                        : 4
-#      LUT5                        : 37
-#      LUT6                        : 44
-#      MUXCY                       : 109
+#      INV                         : 1
+#      LUT1                        : 27
+#      MUXCY                       : 27
 #      VCC                         : 1
-#      XORCY                       : 66
-# FlipFlops/Latches                : 293
-#      FD                          : 59
-#      FDE                         : 233
-#      FDR                         : 1
-# Shift Registers                  : 225
-#      SRLC16E                     : 225
+#      XORCY                       : 28
+# FlipFlops/Latches                : 28
+#      FD                          : 28
 # Clock Buffers                    : 1
 #      BUFGP                       : 1
 # IO Buffers                       : 227
-#      IBUF                        : 225
-#      OBUF                        : 2
+#      OBUF                        : 227
 
 Device utilization summary:
 ---------------------------
@@ -491,18 +225,16 @@ Selected Device : 6slx16csg324-2
 
 
 Slice Logic Utilization: 
- Number of Slice Registers:             293  out of  18224     1%  
- Number of Slice LUTs:                  380  out of   9112     4%  
-    Number used as Logic:               155  out of   9112     1%  
-    Number used as Memory:              225  out of   2176    10%  
-       Number used as SRL:              225
+ Number of Slice Registers:              28  out of  18224     0%  
+ Number of Slice LUTs:                   28  out of   9112     0%  
+    Number used as Logic:                28  out of   9112     0%  
 
 Slice Logic Distribution: 
- Number of LUT Flip Flop pairs used:    381
-   Number with an unused Flip Flop:      88  out of    381    23%  
-   Number with an unused LUT:             1  out of    381     0%  
-   Number of fully used LUT-FF pairs:   292  out of    381    76%  
-   Number of unique control sets:         4
+ Number of LUT Flip Flop pairs used:     28
+   Number with an unused Flip Flop:       0  out of     28     0%  
+   Number with an unused LUT:             0  out of     28     0%  
+   Number of fully used LUT-FF pairs:    28  out of     28   100%  
+   Number of unique control sets:         1
 
 IO Utilization: 
  Number of IOs:                         228
@@ -532,7 +264,7 @@ Clock Information:
 -----------------------------------+------------------------+-------+
 Clock Signal                       | Clock buffer(FF name)  | Load  |
 -----------------------------------+------------------------+-------+
-clk_in                             | BUFGP                  | 518   |
+clk_in                             | BUFGP                  | 28    |
 -----------------------------------+------------------------+-------+
 
 Asynchronous Control Signals Information:
@@ -543,8 +275,8 @@ Timing Summary:
 ---------------
 Speed Grade: -2
 
-   Minimum period: 4.865ns (Maximum Frequency: 205.557MHz)
-   Minimum input arrival time before clock: 2.009ns
+   Minimum period: 2.561ns (Maximum Frequency: 390.549MHz)
+   Minimum input arrival time before clock: No path found
    Maximum output required time after clock: 4.162ns
    Maximum combinational path delay: No path found
 
@@ -554,69 +286,69 @@ All values displayed in nanoseconds (ns)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'clk_in'
-  Clock period: 4.865ns (frequency: 205.557MHz)
-  Total number of paths / destination ports: 9705 / 302
+  Clock period: 2.561ns (frequency: 390.549MHz)
+  Total number of paths / destination ports: 406 / 28
 -------------------------------------------------------------------------
-Delay:               4.865ns (Levels of Logic = 10)
-  Source:            high_cnt_0 (FF)
-  Destination:       match_latched (FF)
+Delay:               2.561ns (Levels of Logic = 29)
+  Source:            cnt_0 (FF)
+  Destination:       cnt_27 (FF)
   Source Clock:      clk_in rising
   Destination Clock: clk_in rising
 
-  Data Path: high_cnt_0 to match_latched
+  Data Path: cnt_0 to cnt_27
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FD:C->Q               4   0.525   1.234  high_cnt_0 (high_cnt_0)
-     LUT5:I0->O            1   0.254   0.000  Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_lut<0> (Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_lut<0>)
-     MUXCY:S->O            1   0.215   0.000  Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<0> (Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<0>)
-     MUXCY:CI->O           1   0.023   0.000  Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<1> (Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<1>)
-     MUXCY:CI->O           1   0.023   0.000  Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<2> (Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<2>)
-     MUXCY:CI->O           1   0.023   0.000  Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<3> (Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<3>)
-     MUXCY:CI->O           1   0.023   0.000  Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<4> (Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<4>)
-     MUXCY:CI->O          31   0.235   1.503  Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<5> (Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<5>)
-     LUT6:I5->O            1   0.254   0.000  match_latched_glue_set_lut (match_latched_glue_set_lut)
-     MUXCY:S->O            1   0.215   0.000  match_latched_glue_set_cy (any_high_l1)
-     MUXCY:CI->O           1   0.262   0.000  match_latched_glue_set_cy1 (match_latched_glue_set)
-     FDR:D                     0.074          match_latched
+     FD:C->Q               1   0.525   0.681  cnt_0 (cnt_0)
+     INV:I->O              1   0.255   0.000  Mcount_cnt_lut<0>_INV_0 (Mcount_cnt_lut<0>)
+     MUXCY:S->O            1   0.215   0.000  Mcount_cnt_cy<0> (Mcount_cnt_cy<0>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<1> (Mcount_cnt_cy<1>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<2> (Mcount_cnt_cy<2>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<3> (Mcount_cnt_cy<3>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<4> (Mcount_cnt_cy<4>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<5> (Mcount_cnt_cy<5>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<6> (Mcount_cnt_cy<6>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<7> (Mcount_cnt_cy<7>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<8> (Mcount_cnt_cy<8>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<9> (Mcount_cnt_cy<9>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<10> (Mcount_cnt_cy<10>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<11> (Mcount_cnt_cy<11>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<12> (Mcount_cnt_cy<12>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<13> (Mcount_cnt_cy<13>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<14> (Mcount_cnt_cy<14>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<15> (Mcount_cnt_cy<15>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<16> (Mcount_cnt_cy<16>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<17> (Mcount_cnt_cy<17>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<18> (Mcount_cnt_cy<18>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<19> (Mcount_cnt_cy<19>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<20> (Mcount_cnt_cy<20>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<21> (Mcount_cnt_cy<21>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<22> (Mcount_cnt_cy<22>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<23> (Mcount_cnt_cy<23>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<24> (Mcount_cnt_cy<24>)
+     MUXCY:CI->O           1   0.023   0.000  Mcount_cnt_cy<25> (Mcount_cnt_cy<25>)
+     MUXCY:CI->O           0   0.023   0.000  Mcount_cnt_cy<26> (Mcount_cnt_cy<26>)
+     XORCY:CI->O           1   0.206   0.000  Mcount_cnt_xor<27> (Result<27>)
+     FD:D                      0.074          cnt_27
     ----------------------------------------
-    Total                      4.865ns (2.128ns logic, 2.737ns route)
-                                       (43.7% logic, 56.3% route)
-
-=========================================================================
-Timing constraint: Default OFFSET IN BEFORE for Clock 'clk_in'
-  Total number of paths / destination ports: 225 / 225
--------------------------------------------------------------------------
-Offset:              2.009ns (Levels of Logic = 1)
-  Source:            pin_in<0> (PAD)
-  Destination:       Mshreg_pin_sync1_0 (FF)
-  Destination Clock: clk_in rising
-
-  Data Path: pin_in<0> to Mshreg_pin_sync1_0
-                                Gate     Net
-    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
-    ----------------------------------------  ------------
-     IBUF:I->O             1   1.328   0.681  pin_in_0_IBUF (pin_in_0_IBUF)
-     SRLC16E:D                -0.060          Mshreg_pin_sync1_0
-    ----------------------------------------
-    Total                      2.009ns (1.328ns logic, 0.681ns route)
-                                       (66.1% logic, 33.9% route)
+    Total                      2.561ns (1.880ns logic, 0.681ns route)
+                                       (73.4% logic, 26.6% route)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'clk_in'
-  Total number of paths / destination ports: 2 / 2
+  Total number of paths / destination ports: 1 / 1
 -------------------------------------------------------------------------
 Offset:              4.162ns (Levels of Logic = 1)
-  Source:            match_latched (FF)
-  Destination:       led<1> (PAD)
+  Source:            cnt_27 (FF)
+  Destination:       led<0> (PAD)
   Source Clock:      clk_in rising
 
-  Data Path: match_latched to led<1>
+  Data Path: cnt_27 to led<0>
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDR:C->Q              2   0.525   0.725  match_latched (match_latched)
-     OBUF:I->O                 2.912          led_1_OBUF (led<1>)
+     FD:C->Q               2   0.525   0.725  cnt_27 (cnt_27)
+     OBUF:I->O                 2.912          led_0_OBUF (led<0>)
     ----------------------------------------
     Total                      4.162ns (3.437ns logic, 0.725ns route)
                                        (82.6% logic, 17.4% route)
@@ -631,19 +363,19 @@ Clock to Setup on destination clock clk_in
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk_in         |    4.865|         |         |         |
+clk_in         |    2.561|         |         |         |
 ---------------+---------+---------+---------+---------+
 
 =========================================================================
 
 
 Total REAL time to Xst completion: 2.00 secs
-Total CPU time to Xst completion: 1.98 secs
+Total CPU time to Xst completion: 1.55 secs
  
 --> 
 
 
-Total memory usage is 376460 kilobytes
+Total memory usage is 375564 kilobytes
 
 Number of errors   :    0 (   0 filtered)
 Number of warnings :    4 (   0 filtered)
