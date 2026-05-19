@@ -6,6 +6,11 @@ module clk_probe #(
     output wire [1:0] led
 );
 
+localparam integer CLK_HZ = 100_000_000;
+localparam integer HIGH_SECS = 10;
+localparam integer CNT_WIDTH = 30;
+localparam [CNT_WIDTH-1:0] COUNT_MAX = (CLK_HZ * HIGH_SECS) - 1;
+
 reg [31:0] cnt = 32'd0;
 
 reg [7:0] por_cnt = 8'd0;
@@ -13,8 +18,8 @@ reg por_done = 1'b0;
 
 reg [PIN_COUNT-1:0] pin_sync0;
 reg [PIN_COUNT-1:0] pin_sync1;
-reg [PIN_COUNT-1:0] pin_prev;
-wire any_edge = |(pin_sync1 ^ pin_prev);
+reg [CNT_WIDTH-1:0] high_cnt = {CNT_WIDTH{1'b0}};
+wire any_high = |pin_sync1;
 
 reg match_latched = 1'b0;
 
@@ -32,11 +37,20 @@ always @(posedge clk_in) begin
             por_done <= 1'b1;
         end
         match_latched <= 1'b0;
-        pin_prev <= pin_sync1;
+        high_cnt <= {CNT_WIDTH{1'b0}};
     end else begin
-        pin_prev <= pin_sync1;
-        if (any_edge) begin
-            match_latched <= 1'b1;
+        if (any_high) begin
+            if (high_cnt < COUNT_MAX) begin
+                high_cnt <= high_cnt + 1'b1;
+                if (high_cnt == COUNT_MAX - 1'b1) begin
+                    match_latched <= 1'b1;
+                end
+            end else begin
+                high_cnt <= high_cnt;
+                match_latched <= 1'b1;
+            end
+        end else begin
+            high_cnt <= {CNT_WIDTH{1'b0}};
         end
     end
 end

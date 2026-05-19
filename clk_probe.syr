@@ -5,14 +5,14 @@ Parameter TMPDIR set to xst/projnav.tmp
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.01 secs
+Total CPU time to Xst completion: 0.02 secs
  
 --> 
 Parameter xsthdpdir set to xst
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.01 secs
+Total CPU time to Xst completion: 0.02 secs
  
 --> 
 Reading design: clk_probe.prj
@@ -129,30 +129,34 @@ Synthesizing Unit <clk_probe>.
     Found 8-bit register for signal <por_cnt>.
     Found 1-bit register for signal <por_done>.
     Found 1-bit register for signal <match_latched>.
-    Found 225-bit register for signal <pin_prev>.
+    Found 30-bit register for signal <high_cnt>.
     Found 32-bit register for signal <cnt>.
-    Found 32-bit adder for signal <cnt[31]_GND_1_o_add_3_OUT> created at line 22.
-    Found 8-bit adder for signal <por_cnt[7]_GND_1_o_add_6_OUT> created at line 30.
+    Found 32-bit adder for signal <cnt[31]_GND_1_o_add_2_OUT> created at line 27.
+    Found 8-bit adder for signal <por_cnt[7]_GND_1_o_add_5_OUT> created at line 35.
+    Found 30-bit adder for signal <high_cnt[29]_GND_1_o_add_8_OUT> created at line 44.
+    Found 30-bit comparator greater for signal <high_cnt[29]_PWR_1_o_LessThan_8_o> created at line 43
     Summary:
-	inferred   2 Adder/Subtractor(s).
-	inferred 717 D-type flip-flop(s).
+	inferred   3 Adder/Subtractor(s).
+	inferred 522 D-type flip-flop(s).
+	inferred   1 Comparator(s).
 Unit <clk_probe> synthesized.
 
 =========================================================================
 HDL Synthesis Report
 
 Macro Statistics
-# Adders/Subtractors                                   : 2
+# Adders/Subtractors                                   : 3
+ 30-bit adder                                          : 1
  32-bit adder                                          : 1
  8-bit adder                                           : 1
-# Registers                                            : 6
+# Registers                                            : 7
  1-bit register                                        : 2
- 225-bit register                                      : 1
+ 225-bit register                                      : 2
+ 30-bit register                                       : 1
  32-bit register                                       : 1
- 450-bit register                                      : 1
  8-bit register                                        : 1
-# Xors                                                 : 1
- 225-bit xor2                                          : 1
+# Comparators                                          : 1
+ 30-bit comparator greater                             : 1
 
 =========================================================================
 
@@ -164,19 +168,21 @@ Macro Statistics
 Synthesizing (advanced) Unit <clk_probe>.
 The following registers are absorbed into counter <cnt>: 1 register on signal <cnt>.
 The following registers are absorbed into counter <por_cnt>: 1 register on signal <por_cnt>.
+The following registers are absorbed into counter <high_cnt>: 1 register on signal <high_cnt>.
 Unit <clk_probe> synthesized (advanced).
 
 =========================================================================
 Advanced HDL Synthesis Report
 
 Macro Statistics
-# Counters                                             : 2
+# Counters                                             : 3
+ 30-bit up counter                                     : 1
  32-bit up counter                                     : 1
  8-bit up counter                                      : 1
-# Registers                                            : 677
- Flip-Flops                                            : 677
-# Xors                                                 : 1
- 225-bit xor2                                          : 1
+# Registers                                            : 452
+ Flip-Flops                                            : 452
+# Comparators                                          : 1
+ 30-bit comparator greater                             : 1
 
 =========================================================================
 
@@ -192,7 +198,7 @@ Optimizing unit <clk_probe> ...
 
 Mapping all equations...
 Building and optimizing final netlist ...
-Found area constraint ratio of 100 (+ 5) on block clk_probe, actual ratio is 12.
+Found area constraint ratio of 100 (+ 5) on block clk_probe, actual ratio is 8.
 
 Final Macro Processing ...
 
@@ -428,8 +434,8 @@ Unit <clk_probe> processed.
 Final Register Report
 
 Macro Statistics
-# Registers                                            : 263
- Flip-Flops                                            : 263
+# Registers                                            : 68
+ Flip-Flops                                            : 68
 # Shift Registers                                      : 225
  2-bit shift register                                  : 225
 
@@ -454,19 +460,20 @@ Top Level Output File Name         : clk_probe.ngc
 
 Primitive and Black Box Usage:
 ------------------------------
-# BELS                             : 263
+# BELS                             : 332
 #      GND                         : 1
-#      INV                         : 3
-#      LUT1                        : 34
+#      INV                         : 5
+#      LUT1                        : 63
 #      LUT2                        : 1
-#      LUT4                        : 1
-#      LUT5                        : 1
-#      LUT6                        : 76
+#      LUT3                        : 1
+#      LUT4                        : 4
+#      LUT5                        : 37
+#      LUT6                        : 44
 #      MUXCY                       : 109
 #      VCC                         : 1
-#      XORCY                       : 36
-# FlipFlops/Latches                : 488
-#      FD                          : 254
+#      XORCY                       : 66
+# FlipFlops/Latches                : 293
+#      FD                          : 59
 #      FDE                         : 233
 #      FDR                         : 1
 # Shift Registers                  : 225
@@ -484,17 +491,17 @@ Selected Device : 6slx16csg324-2
 
 
 Slice Logic Utilization: 
- Number of Slice Registers:             488  out of  18224     2%  
- Number of Slice LUTs:                  341  out of   9112     3%  
-    Number used as Logic:               116  out of   9112     1%  
+ Number of Slice Registers:             293  out of  18224     1%  
+ Number of Slice LUTs:                  380  out of   9112     4%  
+    Number used as Logic:               155  out of   9112     1%  
     Number used as Memory:              225  out of   2176    10%  
        Number used as SRL:              225
 
 Slice Logic Distribution: 
- Number of LUT Flip Flop pairs used:    566
-   Number with an unused Flip Flop:      78  out of    566    13%  
-   Number with an unused LUT:           225  out of    566    39%  
-   Number of fully used LUT-FF pairs:   263  out of    566    46%  
+ Number of LUT Flip Flop pairs used:    381
+   Number with an unused Flip Flop:      88  out of    381    23%  
+   Number with an unused LUT:             1  out of    381     0%  
+   Number of fully used LUT-FF pairs:   292  out of    381    76%  
    Number of unique control sets:         4
 
 IO Utilization: 
@@ -525,7 +532,7 @@ Clock Information:
 -----------------------------------+------------------------+-------+
 Clock Signal                       | Clock buffer(FF name)  | Load  |
 -----------------------------------+------------------------+-------+
-clk_in                             | BUFGP                  | 713   |
+clk_in                             | BUFGP                  | 518   |
 -----------------------------------+------------------------+-------+
 
 Asynchronous Control Signals Information:
@@ -536,7 +543,7 @@ Timing Summary:
 ---------------
 Speed Grade: -2
 
-   Minimum period: 4.024ns (Maximum Frequency: 248.493MHz)
+   Minimum period: 4.865ns (Maximum Frequency: 205.557MHz)
    Minimum input arrival time before clock: 2.009ns
    Maximum output required time after clock: 4.162ns
    Maximum combinational path delay: No path found
@@ -547,44 +554,34 @@ All values displayed in nanoseconds (ns)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'clk_in'
-  Clock period: 4.024ns (frequency: 248.493MHz)
-  Total number of paths / destination ports: 1362 / 497
+  Clock period: 4.865ns (frequency: 205.557MHz)
+  Total number of paths / destination ports: 9705 / 302
 -------------------------------------------------------------------------
-Delay:               4.024ns (Levels of Logic = 20)
-  Source:            pin_prev_172 (FF)
+Delay:               4.865ns (Levels of Logic = 10)
+  Source:            high_cnt_0 (FF)
   Destination:       match_latched (FF)
   Source Clock:      clk_in rising
   Destination Clock: clk_in rising
 
-  Data Path: pin_prev_172 to match_latched
+  Data Path: high_cnt_0 to match_latched
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FD:C->Q               1   0.525   1.137  pin_prev_172 (pin_prev_172)
-     LUT6:I0->O            1   0.254   0.000  out_wg_lut<57> (out_wg_lut<57>)
-     MUXCY:S->O            1   0.215   0.000  out_wg_cy<57> (out_wg_cy<57>)
-     MUXCY:CI->O           1   0.023   0.000  out_wg_cy<58> (out_wg_cy<58>)
-     MUXCY:CI->O           1   0.023   0.000  out_wg_cy<59> (out_wg_cy<59>)
-     MUXCY:CI->O           1   0.023   0.000  out_wg_cy<60> (out_wg_cy<60>)
-     MUXCY:CI->O           1   0.023   0.000  out_wg_cy<61> (out_wg_cy<61>)
-     MUXCY:CI->O           1   0.023   0.000  out_wg_cy<62> (out_wg_cy<62>)
-     MUXCY:CI->O           1   0.023   0.000  out_wg_cy<63> (out_wg_cy<63>)
-     MUXCY:CI->O           1   0.023   0.000  out_wg_cy<64> (out_wg_cy<64>)
-     MUXCY:CI->O           1   0.023   0.000  out_wg_cy<65> (out_wg_cy<65>)
-     MUXCY:CI->O           1   0.023   0.000  out_wg_cy<66> (out_wg_cy<66>)
-     MUXCY:CI->O           1   0.023   0.000  out_wg_cy<67> (out_wg_cy<67>)
-     MUXCY:CI->O           1   0.023   0.000  out_wg_cy<68> (out_wg_cy<68>)
-     MUXCY:CI->O           1   0.023   0.000  out_wg_cy<69> (out_wg_cy<69>)
-     MUXCY:CI->O           1   0.023   0.000  out_wg_cy<70> (out_wg_cy<70>)
-     MUXCY:CI->O           1   0.023   0.000  out_wg_cy<71> (out_wg_cy<71>)
-     MUXCY:CI->O           1   0.023   0.000  out_wg_cy<72> (out_wg_cy<72>)
-     MUXCY:CI->O           1   0.023   0.000  out_wg_cy<73> (out_wg_cy<73>)
-     MUXCY:CI->O           1   0.235   0.958  out_wg_cy<74> (out_wg_cy<74>)
-     LUT5:I1->O            1   0.254   0.000  match_latched_glue_set (match_latched_glue_set)
+     FD:C->Q               4   0.525   1.234  high_cnt_0 (high_cnt_0)
+     LUT5:I0->O            1   0.254   0.000  Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_lut<0> (Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_lut<0>)
+     MUXCY:S->O            1   0.215   0.000  Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<0> (Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<0>)
+     MUXCY:CI->O           1   0.023   0.000  Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<1> (Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<1>)
+     MUXCY:CI->O           1   0.023   0.000  Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<2> (Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<2>)
+     MUXCY:CI->O           1   0.023   0.000  Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<3> (Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<3>)
+     MUXCY:CI->O           1   0.023   0.000  Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<4> (Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<4>)
+     MUXCY:CI->O          31   0.235   1.503  Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<5> (Mcompar_high_cnt[29]_PWR_1_o_LessThan_8_o_cy<5>)
+     LUT6:I5->O            1   0.254   0.000  match_latched_glue_set_lut (match_latched_glue_set_lut)
+     MUXCY:S->O            1   0.215   0.000  match_latched_glue_set_cy (any_high_l1)
+     MUXCY:CI->O           1   0.262   0.000  match_latched_glue_set_cy1 (match_latched_glue_set)
      FDR:D                     0.074          match_latched
     ----------------------------------------
-    Total                      4.024ns (1.929ns logic, 2.095ns route)
-                                       (47.9% logic, 52.1% route)
+    Total                      4.865ns (2.128ns logic, 2.737ns route)
+                                       (43.7% logic, 56.3% route)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'clk_in'
@@ -634,19 +631,19 @@ Clock to Setup on destination clock clk_in
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk_in         |    4.024|         |         |         |
+clk_in         |    4.865|         |         |         |
 ---------------+---------+---------+---------+---------+
 
 =========================================================================
 
 
 Total REAL time to Xst completion: 2.00 secs
-Total CPU time to Xst completion: 2.05 secs
+Total CPU time to Xst completion: 1.98 secs
  
 --> 
 
 
-Total memory usage is 377124 kilobytes
+Total memory usage is 376460 kilobytes
 
 Number of errors   :    0 (   0 filtered)
 Number of warnings :    4 (   0 filtered)

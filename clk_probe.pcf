@@ -1,14 +1,8 @@
 //! **************************************************************************
-// Written by: Map P.20131013 on Wed May 20 02:54:08 2026
+// Written by: Map P.20131013 on Wed May 20 03:04:48 2026
 //! **************************************************************************
 
 SCHEMATIC START;
-COMP "pin_in<10>" LOCATE = SITE "A5" LEVEL 1;
-COMP "pin_in<11>" LOCATE = SITE "F7" LEVEL 1;
-COMP "pin_in<12>" LOCATE = SITE "E6" LEVEL 1;
-COMP "pin_in<20>" LOCATE = SITE "C8" LEVEL 1;
-COMP "pin_in<13>" LOCATE = SITE "B6" LEVEL 1;
-COMP "pin_in<21>" LOCATE = SITE "G8" LEVEL 1;
 COMP "pin_in<14>" LOCATE = SITE "A6" LEVEL 1;
 COMP "pin_in<22>" LOCATE = SITE "F8" LEVEL 1;
 COMP "pin_in<30>" LOCATE = SITE "A10" LEVEL 1;
@@ -231,5 +225,11 @@ COMP "pin_in<9>" LOCATE = SITE "C5" LEVEL 1;
 COMP "led<0>" LOCATE = SITE "D11" LEVEL 1;
 COMP "led<1>" LOCATE = SITE "C11" LEVEL 1;
 COMP "clk_in" LOCATE = SITE "U10" LEVEL 1;
+COMP "pin_in<10>" LOCATE = SITE "A5" LEVEL 1;
+COMP "pin_in<11>" LOCATE = SITE "F7" LEVEL 1;
+COMP "pin_in<12>" LOCATE = SITE "E6" LEVEL 1;
+COMP "pin_in<20>" LOCATE = SITE "C8" LEVEL 1;
+COMP "pin_in<13>" LOCATE = SITE "B6" LEVEL 1;
+COMP "pin_in<21>" LOCATE = SITE "G8" LEVEL 1;
 SCHEMATIC END;
 
