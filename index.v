@@ -87,7 +87,7 @@ always @(posedge clk_in) begin
     end
 end
 
-assign pin_out = {1'b0, tx_line};
+assign pin_out = {1'b0, ~tx_line};
 assign led[0] = cnt[27];
 assign led[1] = 1'b0;
 
