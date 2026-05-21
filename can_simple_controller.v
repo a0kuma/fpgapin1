@@ -105,8 +105,7 @@ reg [7:0] rx_byte_shift = 8'd0;
 reg [14:0] rx_crc = 15'd0;
 reg [14:0] rx_crc_recv = 15'd0;
 reg [3:0] rx_dlc_shift = 4'd0;
-reg [3:0] rx_dlc_next = 4'd0;
-reg [14:0] rx_crc_recv_next = 15'd0;
+wire [3:0] rx_dlc_shift_next = {rx_dlc_shift[2:0], can_rx_s};
 reg rx_rtr = 1'b0;
 reg rx_ide = 1'b0;
 reg rx_frame_ok = 1'b0;
@@ -114,7 +113,6 @@ reg rx_stuff_error = 1'b0;
 reg rx_destuff_en = 1'b0;
 reg rx_last_bit = 1'b1;
 reg [2:0] rx_same_cnt = 3'd0;
-reg rx_bit_in = 1'b1;
 reg rx_skip_bit = 1'b0;
 
 reg prep_active = 1'b0;
@@ -212,8 +210,6 @@ always @(posedge clk) begin
         rx_crc <= 15'd0;
         rx_crc_recv <= 15'd0;
         rx_dlc_shift <= 4'd0;
-        rx_dlc_next <= 4'd0;
-        rx_crc_recv_next <= 15'd0;
         rx_rtr <= 1'b0;
         rx_ide <= 1'b0;
         rx_frame_ok <= 1'b0;
@@ -221,8 +217,6 @@ always @(posedge clk) begin
         rx_destuff_en <= 1'b0;
         rx_last_bit <= 1'b1;
         rx_same_cnt <= 3'd0;
-        rx_bit_in <= 1'b1;
-        rx_skip_bit <= 1'b0;
         rx_id <= 11'd0;
         rx_dlc <= 4'd0;
         rx_data <= 64'd0;
@@ -251,35 +245,34 @@ always @(posedge clk) begin
         end
 
         if (sample_tick && rx_state != RX_IDLE && !tx_active) begin
-            rx_bit_in = can_rx_s;
             rx_skip_bit = 1'b0;
 
             if (rx_destuff_en) begin
                 if (rx_same_cnt == 3'd5) begin
-                    if (rx_bit_in == rx_last_bit) begin
+                    if (can_rx_s == rx_last_bit) begin
                         rx_stuff_error <= 1'b1;
                     end
-                    rx_last_bit <= rx_bit_in;
+                    rx_last_bit <= can_rx_s;
                     rx_same_cnt <= 3'd1;
                     rx_skip_bit = 1'b1;
                 end else begin
-                    if (rx_bit_in == rx_last_bit) begin
+                    if (can_rx_s == rx_last_bit) begin
                         rx_same_cnt <= rx_same_cnt + 1'b1;
                     end else begin
                         rx_same_cnt <= 3'd1;
-                        rx_last_bit <= rx_bit_in;
+                        rx_last_bit <= can_rx_s;
                     end
                 end
             end else begin
-                rx_last_bit <= rx_bit_in;
+                rx_last_bit <= can_rx_s;
                 rx_same_cnt <= 3'd1;
             end
 
             if (!rx_skip_bit) begin
                 case (rx_state)
                     RX_SOF: begin
-                        if (rx_bit_in == 1'b0) begin
-                            rx_crc <= crc15_next(rx_crc, rx_bit_in);
+                        if (can_rx_s == 1'b0) begin
+                            rx_crc <= crc15_next(rx_crc, can_rx_s);
                             rx_state <= RX_ID;
                             rx_bit_cnt <= 5'd0;
                         end else begin
@@ -287,8 +280,8 @@ always @(posedge clk) begin
                         end
                     end
                     RX_ID: begin
-                        rx_id <= {rx_id[9:0], rx_bit_in};
-                        rx_crc <= crc15_next(rx_crc, rx_bit_in);
+                        rx_id <= {rx_id[9:0], can_rx_s};
+                        rx_crc <= crc15_next(rx_crc, can_rx_s);
                         if (rx_bit_cnt == 5'd10) begin
                             rx_state <= RX_RTR;
                             rx_bit_cnt <= 5'd0;
@@ -297,29 +290,28 @@ always @(posedge clk) begin
                         end
                     end
                     RX_RTR: begin
-                        rx_rtr <= rx_bit_in;
-                        rx_crc <= crc15_next(rx_crc, rx_bit_in);
+                        rx_rtr <= can_rx_s;
+                        rx_crc <= crc15_next(rx_crc, can_rx_s);
                         rx_state <= RX_IDE;
                     end
                     RX_IDE: begin
-                        rx_ide <= rx_bit_in;
-                        rx_crc <= crc15_next(rx_crc, rx_bit_in);
+                        rx_ide <= can_rx_s;
+                        rx_crc <= crc15_next(rx_crc, can_rx_s);
                         rx_state <= RX_R0;
                     end
                     RX_R0: begin
-                        rx_crc <= crc15_next(rx_crc, rx_bit_in);
+                        rx_crc <= crc15_next(rx_crc, can_rx_s);
                         rx_state <= RX_DLC;
                         rx_bit_cnt <= 5'd0;
                         rx_dlc_shift <= 4'd0;
                     end
                     RX_DLC: begin
-                        rx_dlc_next = {rx_dlc_shift[2:0], rx_bit_in};
-                        rx_dlc_shift <= {rx_dlc_shift[2:0], rx_bit_in};
-                        rx_crc <= crc15_next(rx_crc, rx_bit_in);
+                        rx_dlc_shift <= rx_dlc_shift_next;
+                        rx_crc <= crc15_next(rx_crc, can_rx_s);
                         if (rx_bit_cnt == 5'd3) begin
                             rx_bit_cnt <= 5'd0;
-                            rx_dlc <= (rx_dlc_next > 4'd8) ? 4'd8 : rx_dlc_next;
-                            if (rx_dlc_next == 4'd0) begin
+                            rx_dlc <= (rx_dlc_shift_next > 4'd8) ? 4'd8 : rx_dlc_shift_next;
+                            if (rx_dlc_shift_next == 4'd0) begin
                                 rx_state <= RX_CRC;
                             end else begin
                                 rx_state <= RX_DATA;
@@ -331,18 +323,18 @@ always @(posedge clk) begin
                         end
                     end
                     RX_DATA: begin
-                        rx_byte_shift <= {rx_byte_shift[6:0], rx_bit_in};
-                        rx_crc <= crc15_next(rx_crc, rx_bit_in);
+                        rx_byte_shift <= {rx_byte_shift[6:0], can_rx_s};
+                        rx_crc <= crc15_next(rx_crc, can_rx_s);
                         if (rx_bit_cnt == 5'd7) begin
                             case (rx_byte_cnt)
-                                3'd0: rx_data[63:56] <= {rx_byte_shift[6:0], rx_bit_in};
-                                3'd1: rx_data[55:48] <= {rx_byte_shift[6:0], rx_bit_in};
-                                3'd2: rx_data[47:40] <= {rx_byte_shift[6:0], rx_bit_in};
-                                3'd3: rx_data[39:32] <= {rx_byte_shift[6:0], rx_bit_in};
-                                3'd4: rx_data[31:24] <= {rx_byte_shift[6:0], rx_bit_in};
-                                3'd5: rx_data[23:16] <= {rx_byte_shift[6:0], rx_bit_in};
-                                3'd6: rx_data[15:8] <= {rx_byte_shift[6:0], rx_bit_in};
-                                3'd7: rx_data[7:0] <= {rx_byte_shift[6:0], rx_bit_in};
+                                3'd0: rx_data[63:56] <= {rx_byte_shift[6:0], can_rx_s};
+                                3'd1: rx_data[55:48] <= {rx_byte_shift[6:0], can_rx_s};
+                                3'd2: rx_data[47:40] <= {rx_byte_shift[6:0], can_rx_s};
+                                3'd3: rx_data[39:32] <= {rx_byte_shift[6:0], can_rx_s};
+                                3'd4: rx_data[31:24] <= {rx_byte_shift[6:0], can_rx_s};
+                                3'd5: rx_data[23:16] <= {rx_byte_shift[6:0], can_rx_s};
+                                3'd6: rx_data[15:8] <= {rx_byte_shift[6:0], can_rx_s};
+                                3'd7: rx_data[7:0] <= {rx_byte_shift[6:0], can_rx_s};
                                 default: rx_data <= rx_data;
                             endcase
                             rx_bit_cnt <= 5'd0;
@@ -357,13 +349,12 @@ always @(posedge clk) begin
                         end
                     end
                     RX_CRC: begin
-                        rx_crc_recv_next = {rx_crc_recv[13:0], rx_bit_in};
-                        rx_crc_recv <= rx_crc_recv_next;
+                        rx_crc_recv <= {rx_crc_recv[13:0], can_rx_s};
                         if (rx_bit_cnt == 5'd14) begin
                             rx_state <= RX_CRC_DELIM;
                             rx_bit_cnt <= 5'd0;
                             rx_destuff_en <= 1'b0;
-                            rx_frame_ok <= (rx_crc_recv_next == rx_crc) && (rx_ide == 1'b0) && (rx_rtr == 1'b0) && !rx_stuff_error;
+                            rx_frame_ok <= ({rx_crc_recv[13:0], can_rx_s} == rx_crc) && (rx_ide == 1'b0) && (rx_rtr == 1'b0) && !rx_stuff_error;
                         end else begin
                             rx_bit_cnt <= rx_bit_cnt + 1'b1;
                         end
@@ -407,10 +398,6 @@ always @(posedge clk) begin
         prep_need_stuff <= 1'b0;
         prep_last_bit <= 1'b1;
         prep_same_cnt <= 3'd0;
-        prep_bit <= 1'b1;
-        prep_stuff_enable <= 1'b0;
-        prep_crc_enable <= 1'b0;
-        prep_same_cnt_next <= 3'd0;
         prep_done_pulse <= 1'b0;
         tx_buf_len <= 8'd0;
         tx_buf <= 256'd0;

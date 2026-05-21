@@ -47,9 +47,14 @@ wire [7:0] rpm_b = RPM_RAW[7:0];
 reg dbg_start = 1'b0;
 reg [7:0] dbg_byte = 8'd0;
 wire dbg_busy;
-reg [1:0] dbg_state = 2'd0;
 reg dbg_pending = 1'b0;
 reg [7:0] dbg_pid = 8'd0;
+reg [1:0] out_state = 2'd0;
+reg [1:0] out_kind = 2'd0;
+
+localparam integer HB_INTERVAL = CLK_HZ;
+reg [31:0] hb_cnt = 32'd0;
+reg hb_pending = 1'b0;
 
 can_simple_controller #(
     .CLK_HZ(CLK_HZ),
@@ -114,43 +119,75 @@ end
 
 always @(posedge clk) begin
     if (reset) begin
-        dbg_state <= 2'd0;
         dbg_pending <= 1'b0;
         dbg_pid <= 8'd0;
         dbg_start <= 1'b0;
         dbg_byte <= 8'd0;
+        out_state <= 2'd0;
+        out_kind <= 2'd0;
+        hb_cnt <= 32'd0;
+        hb_pending <= 1'b0;
     end else begin
         dbg_start <= 1'b0;
+        if (hb_cnt == HB_INTERVAL - 1) begin
+            hb_cnt <= 32'd0;
+            hb_pending <= 1'b1;
+        end else begin
+            hb_cnt <= hb_cnt + 1'b1;
+        end
         if (rx_valid && is_obd_req && is_pid_supported) begin
             dbg_pending <= 1'b1;
             dbg_pid <= rx_b2;
         end
 
-        case (dbg_state)
+        case (out_state)
             2'd0: begin
-                if (dbg_pending && !dbg_busy) begin
-                    dbg_byte <= 8'h52; // 'R'
-                    dbg_start <= 1'b1;
-                    dbg_state <= 2'd1;
+                if (!dbg_busy) begin
+                    if (dbg_pending) begin
+                        out_kind <= 2'd1;
+                        dbg_byte <= 8'h52; // 'R'
+                        dbg_start <= 1'b1;
+                        out_state <= 2'd1;
+                    end else if (hb_pending) begin
+                        out_kind <= 2'd2;
+                        dbg_byte <= 8'h48; // 'H'
+                        dbg_start <= 1'b1;
+                        out_state <= 2'd1;
+                    end
                 end
             end
             2'd1: begin
                 if (!dbg_busy) begin
-                    dbg_byte <= dbg_pid;
+                    if (out_kind == 2'd1) begin
+                        dbg_byte <= dbg_pid;
+                    end else begin
+                        dbg_byte <= 8'h42; // 'B'
+                    end
                     dbg_start <= 1'b1;
-                    dbg_state <= 2'd2;
+                    out_state <= 2'd2;
                 end
             end
             2'd2: begin
                 if (!dbg_busy) begin
                     dbg_byte <= 8'h0A;
                     dbg_start <= 1'b1;
-                    dbg_state <= 2'd0;
-                    dbg_pending <= 1'b0;
+                    out_state <= 2'd3;
+                end
+            end
+            2'd3: begin
+                if (!dbg_busy) begin
+                    out_state <= 2'd0;
+                    if (out_kind == 2'd1) begin
+                        dbg_pending <= 1'b0;
+                    end else begin
+                        hb_pending <= 1'b0;
+                    end
+                    out_kind <= 2'd0;
                 end
             end
             default: begin
-                dbg_state <= 2'd0;
+                out_state <= 2'd0;
+                out_kind <= 2'd0;
             end
         endcase
     end

@@ -5,7 +5,7 @@ Parameter TMPDIR set to xst/projnav.tmp
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.02 secs
+Total CPU time to Xst completion: 0.01 secs
  
 --> 
 Parameter xsthdpdir set to xst
@@ -108,6 +108,12 @@ Slice Utilization Ratio Delta      : 5
 =========================================================================
 *                          HDL Parsing                                  *
 =========================================================================
+Analyzing Verilog file "/home/andy/verilog_workspace/assume_board_is_nexys3/uart_tx.v" into library work
+Parsing module <uart_tx>.
+Analyzing Verilog file "/home/andy/verilog_workspace/assume_board_is_nexys3/can_simple_controller.v" into library work
+Parsing module <can_simple_controller>.
+Analyzing Verilog file "/home/andy/verilog_workspace/assume_board_is_nexys3/obd_can_node.v" into library work
+Parsing module <obd_can_node>.
 Analyzing Verilog file "/home/andy/verilog_workspace/assume_board_is_nexys3/index.v" into library work
 Parsing module <clk_probe>.
 
@@ -116,8 +122,14 @@ Parsing module <clk_probe>.
 =========================================================================
 
 Elaborating module <clk_probe>.
-WARNING:HDLCompiler:413 - "/home/andy/verilog_workspace/assume_board_is_nexys3/index.v" Line 81: Result of 15-bit expression is truncated to fit in 14-bit target.
-WARNING:HDLCompiler:413 - "/home/andy/verilog_workspace/assume_board_is_nexys3/index.v" Line 98: Result of 15-bit expression is truncated to fit in 14-bit target.
+
+Elaborating module <obd_can_node(CLK_HZ=100000000,CAN_BITRATE=500000,UART_BAUD=115200)>.
+
+Elaborating module <can_simple_controller(CLK_HZ=100000000,CAN_BITRATE=500000)>.
+WARNING:HDLCompiler:1127 - "/home/andy/verilog_workspace/assume_board_is_nexys3/can_simple_controller.v" Line 594: Assignment to tx_ack_seen ignored, since the identifier is never used
+WARNING:HDLCompiler:1127 - "/home/andy/verilog_workspace/assume_board_is_nexys3/obd_can_node.v" Line 72: Assignment to tx_done ignored, since the identifier is never used
+
+Elaborating module <uart_tx(CLK_HZ=100000000,BAUD=115200)>.
 
 =========================================================================
 *                           HDL Synthesis                               *
@@ -125,80 +137,273 @@ WARNING:HDLCompiler:413 - "/home/andy/verilog_workspace/assume_board_is_nexys3/i
 
 Synthesizing Unit <clk_probe>.
     Related source file is "/home/andy/verilog_workspace/assume_board_is_nexys3/index.v".
-WARNING:Xst:647 - Input <uart_rx_can> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
-    Found 14-bit register for signal <baud_cnt>.
-    Found 8-bit register for signal <last_rx>.
-    Found 2-bit register for signal <rx_state>.
-    Found 14-bit register for signal <rx_cnt>.
-    Found 8-bit register for signal <rx_shift>.
-    Found 3-bit register for signal <rx_bit_idx>.
-    Found 1-bit register for signal <tx_line>.
-    Found 4-bit register for signal <msg_idx>.
-    Found 2-bit register for signal <state>.
-    Found 3-bit register for signal <bit_idx>.
-    Found 8-bit register for signal <tx_shift>.
+    Found 21-bit register for signal <rst_cnt>.
+    Found 1-bit register for signal <reset>.
     Found 32-bit register for signal <cnt>.
-    Found finite state machine <FSM_0> for signal <rx_state>.
+    Found 32-bit adder for signal <cnt[31]_GND_1_o_add_1_OUT> created at line 21.
+    Found 21-bit adder for signal <rst_cnt[20]_GND_1_o_add_2_OUT> created at line 23.
+    Summary:
+	inferred   2 Adder/Subtractor(s).
+	inferred  54 D-type flip-flop(s).
+Unit <clk_probe> synthesized.
+
+Synthesizing Unit <obd_can_node>.
+    Related source file is "/home/andy/verilog_workspace/assume_board_is_nexys3/obd_can_node.v".
+        CLK_HZ = 100000000
+        CAN_BITRATE = 500000
+        UART_BAUD = 115200
+WARNING:Xst:647 - Input <uart_rx> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+INFO:Xst:3210 - "/home/andy/verilog_workspace/assume_board_is_nexys3/obd_can_node.v" line 62: Output port <tx_done> of the instance <can_core> is unconnected or connected to loadless signal.
+    Found 8-bit register for signal <resp_pid>.
+    Found 1-bit register for signal <tx_start>.
+    Found 11-bit register for signal <tx_id>.
+    Found 4-bit register for signal <tx_dlc>.
+    Found 64-bit register for signal <tx_data>.
+    Found 1-bit register for signal <dbg_pending>.
+    Found 8-bit register for signal <dbg_pid>.
+    Found 1-bit register for signal <dbg_start>.
+    Found 8-bit register for signal <dbg_byte>.
+    Found 2-bit register for signal <out_state>.
+    Found 2-bit register for signal <out_kind>.
+    Found 32-bit register for signal <hb_cnt>.
+    Found 1-bit register for signal <hb_pending>.
+    Found 1-bit register for signal <resp_pending>.
+    Found finite state machine <FSM_0> for signal <out_state>.
     -----------------------------------------------------------------------
     | States             | 4                                              |
     | Transitions        | 10                                             |
     | Inputs             | 3                                              |
     | Outputs            | 2                                              |
-    | Clock              | clk_in (rising_edge)                           |
+    | Clock              | clk (rising_edge)                              |
+    | Reset              | reset (positive)                               |
+    | Reset type         | synchronous                                    |
+    | Reset State        | 00                                             |
     | Power Up State     | 00                                             |
     | Encoding           | auto                                           |
     | Implementation     | LUT                                            |
     -----------------------------------------------------------------------
-    Found finite state machine <FSM_1> for signal <state>.
+    Found 32-bit adder for signal <hb_cnt[31]_GND_2_o_add_32_OUT> created at line 136.
+    Found 1-bit 4-to-1 multiplexer for signal <out_state[1]_GND_2_o_Mux_58_o> created at line 143.
+    Found 4-bit comparator lessequal for signal <n0006> created at line 41
+    Summary:
+	inferred   1 Adder/Subtractor(s).
+	inferred 142 D-type flip-flop(s).
+	inferred   1 Comparator(s).
+	inferred   9 Multiplexer(s).
+	inferred   1 Finite State Machine(s).
+Unit <obd_can_node> synthesized.
+
+Synthesizing Unit <can_simple_controller>.
+    Related source file is "/home/andy/verilog_workspace/assume_board_is_nexys3/can_simple_controller.v".
+        CLK_HZ = 100000000
+        CAN_BITRATE = 500000
+        TQ_PER_BIT = 8
+        SAMPLE_TQ = 6
+    Found 1-bit register for signal <can_rx_ff2>.
+    Found 1-bit register for signal <can_rx_prev>.
+    Found 5-bit register for signal <tq_div_cnt>.
+    Found 3-bit register for signal <tq_cnt>.
+    Found 2-bit register for signal <idle_cnt>.
+    Found 4-bit register for signal <rx_state>.
+    Found 5-bit register for signal <rx_bit_cnt>.
+    Found 3-bit register for signal <rx_byte_cnt>.
+    Found 8-bit register for signal <rx_byte_shift>.
+    Found 15-bit register for signal <rx_crc>.
+    Found 15-bit register for signal <rx_crc_recv>.
+    Found 4-bit register for signal <rx_dlc_shift>.
+    Found 1-bit register for signal <rx_rtr>.
+    Found 1-bit register for signal <rx_ide>.
+    Found 1-bit register for signal <rx_frame_ok>.
+    Found 1-bit register for signal <rx_stuff_error>.
+    Found 1-bit register for signal <rx_destuff_en>.
+    Found 1-bit register for signal <rx_last_bit>.
+    Found 3-bit register for signal <rx_same_cnt>.
+    Found 11-bit register for signal <rx_id>.
+    Found 4-bit register for signal <rx_dlc>.
+    Found 64-bit register for signal <rx_data>.
+    Found 1-bit register for signal <rx_valid>.
+    Found 1-bit register for signal <prep_active>.
+    Found 4-bit register for signal <prep_state>.
+    Found 5-bit register for signal <prep_bit_cnt>.
+    Found 3-bit register for signal <prep_byte_cnt>.
+    Found 15-bit register for signal <prep_crc>.
+    Found 1-bit register for signal <prep_need_stuff>.
+    Found 1-bit register for signal <prep_last_bit>.
+    Found 3-bit register for signal <prep_same_cnt>.
+    Found 1-bit register for signal <prep_done_pulse>.
+    Found 8-bit register for signal <tx_buf_len>.
+    Found 256-bit register for signal <tx_buf>.
+    Found 11-bit register for signal <tx_msg_id>.
+    Found 4-bit register for signal <tx_msg_dlc>.
+    Found 64-bit register for signal <tx_msg_data>.
+    Found 1-bit register for signal <tx_active>.
+    Found 1-bit register for signal <tx_pending>.
+    Found 8-bit register for signal <tx_buf_pos>.
+    Found 1-bit register for signal <tx_bit>.
+    Found 1-bit register for signal <tx_done>.
+    Found 1-bit register for signal <can_rx_ff1>.
+    Found finite state machine <FSM_1> for signal <rx_state>.
+    -----------------------------------------------------------------------
+    | States             | 13                                             |
+    | Transitions        | 72                                             |
+    | Inputs             | 13                                             |
+    | Outputs            | 6                                              |
+    | Clock              | clk (rising_edge)                              |
+    | Reset              | reset (positive)                               |
+    | Reset type         | synchronous                                    |
+    | Reset State        | 0000                                           |
+    | Power Up State     | 0000                                           |
+    | Encoding           | auto                                           |
+    | Implementation     | LUT                                            |
+    -----------------------------------------------------------------------
+    Found finite state machine <FSM_2> for signal <prep_state>.
+    -----------------------------------------------------------------------
+    | States             | 13                                             |
+    | Transitions        | 69                                             |
+    | Inputs             | 11                                             |
+    | Outputs            | 7                                              |
+    | Clock              | clk (rising_edge)                              |
+    | Reset              | reset (positive)                               |
+    | Reset type         | synchronous                                    |
+    | Reset State        | 0000                                           |
+    | Power Up State     | 0000                                           |
+    | Encoding           | auto                                           |
+    | Implementation     | LUT                                            |
+    -----------------------------------------------------------------------
+    Found 4-bit subtractor for signal <rx_dlc[3]_GND_3_o_sub_91_OUT> created at line 341.
+    Found 7-bit subtractor for signal <GND_3_o_GND_3_o_sub_184_OUT> created at line 462.
+    Found 4-bit subtractor for signal <tx_msg_dlc[3]_GND_3_o_sub_215_OUT> created at line 548.
+    Found 8-bit subtractor for signal <tx_buf_len[7]_GND_3_o_sub_296_OUT> created at line 624.
+    Found 3-bit adder for signal <tq_cnt[2]_GND_3_o_add_12_OUT> created at line 181.
+    Found 5-bit adder for signal <tq_div_cnt[4]_GND_3_o_add_14_OUT> created at line 184.
+    Found 2-bit adder for signal <idle_cnt[1]_GND_3_o_add_27_OUT> created at line 196.
+    Found 3-bit adder for signal <rx_same_cnt[2]_GND_3_o_add_49_OUT> created at line 260.
+    Found 3-bit adder for signal <rx_byte_cnt[2]_GND_3_o_add_92_OUT> created at line 344.
+    Found 5-bit adder for signal <rx_bit_cnt[4]_GND_3_o_add_110_OUT> created at line 379.
+    Found 8-bit adder for signal <tx_buf_len[7]_GND_3_o_add_191_OUT> created at line 486.
+    Found 3-bit adder for signal <prep_same_cnt[2]_GND_3_o_add_196_OUT> created at line 494.
+    Found 3-bit adder for signal <prep_byte_cnt[2]_GND_3_o_add_216_OUT> created at line 551.
+    Found 5-bit adder for signal <prep_bit_cnt[4]_GND_3_o_add_228_OUT> created at line 579.
+    Found 8-bit adder for signal <tx_buf_pos[7]_GND_3_o_add_297_OUT> created at line 629.
+    Found 4-bit subtractor for signal <GND_3_o_GND_3_o_sub_180_OUT<3:0>> created at line 447.
+    Found 2-bit subtractor for signal <GND_3_o_GND_3_o_sub_182_OUT<1:0>> created at line 459.
+    Found 6-bit subtractor for signal <GND_3_o_GND_3_o_sub_185_OUT<5:0>> created at line 462.
+    Found 4-bit subtractor for signal <GND_3_o_GND_3_o_sub_187_OUT<3:0>> created at line 465.
+    Found 64-bit 8-to-1 multiplexer for signal <rx_byte_cnt[2]_rx_data[63]_wide_mux_89_OUT> created at line 329.
+    Found 1-bit 11-to-1 multiplexer for signal <GND_3_o_X_3_o_Mux_180_o> created at line 447.
+    Found 1-bit 4-to-1 multiplexer for signal <GND_3_o_tx_msg_dlc[3]_Mux_182_o> created at line 459.
+    Found 1-bit 64-to-1 multiplexer for signal <GND_3_o_tx_msg_data[63]_Mux_185_o> created at line 462.
+    Found 1-bit 15-to-1 multiplexer for signal <GND_3_o_X_3_o_Mux_187_o> created at line 465.
+    Found 1-bit 256-to-1 multiplexer for signal <tx_buf_pos[7]_tx_buf[255]_Mux_299_o> created at line 630.
+    Found 1-bit comparator equal for signal <can_rx_s_rx_last_bit_equal_48_o> created at line 252
+    Found 4-bit comparator greater for signal <PWR_3_o_rx_dlc_shift_next[3]_LessThan_75_o> created at line 313
+    Found 4-bit comparator equal for signal <GND_3_o_rx_dlc[3]_equal_92_o> created at line 341
+    Found 15-bit comparator equal for signal <rx_crc_recv[13]_rx_crc[14]_equal_104_o> created at line 357
+    Found 4-bit comparator greater for signal <PWR_3_o_tx_dlc[3]_LessThan_173_o> created at line 412
+    Found 1-bit comparator equal for signal <prep_state[3]_prep_last_bit_equal_196_o> created at line 493
+    Found 4-bit comparator equal for signal <GND_3_o_tx_msg_dlc[3]_equal_216_o> created at line 548
+    Found 8-bit comparator equal for signal <tx_buf_pos[7]_tx_buf_len[7]_equal_297_o> created at line 624
+    Summary:
+	inferred  19 Adder/Subtractor(s).
+	inferred 537 D-type flip-flop(s).
+	inferred   8 Comparator(s).
+	inferred 646 Multiplexer(s).
+	inferred   2 Finite State Machine(s).
+Unit <can_simple_controller> synthesized.
+
+Synthesizing Unit <uart_tx>.
+    Related source file is "/home/andy/verilog_workspace/assume_board_is_nexys3/uart_tx.v".
+        CLK_HZ = 100000000
+        BAUD = 115200
+    Found 10-bit register for signal <baud_cnt>.
+    Found 3-bit register for signal <bit_idx>.
+    Found 8-bit register for signal <shifter>.
+    Found 1-bit register for signal <tx_busy>.
+    Found 1-bit register for signal <tx_line>.
+    Found 2-bit register for signal <state>.
+    Found finite state machine <FSM_3> for signal <state>.
     -----------------------------------------------------------------------
     | States             | 4                                              |
     | Transitions        | 9                                              |
-    | Inputs             | 2                                              |
-    | Outputs            | 2                                              |
-    | Clock              | clk_in (rising_edge)                           |
+    | Inputs             | 3                                              |
+    | Outputs            | 3                                              |
+    | Clock              | clk (rising_edge)                              |
+    | Reset              | reset (positive)                               |
+    | Reset type         | synchronous                                    |
+    | Reset State        | 00                                             |
     | Power Up State     | 00                                             |
     | Encoding           | auto                                           |
     | Implementation     | LUT                                            |
     -----------------------------------------------------------------------
-    Found 14-bit subtractor for signal <rx_cnt[13]_GND_1_o_sub_34_OUT> created at line 108.
-    Found 32-bit adder for signal <cnt[31]_GND_1_o_add_2_OUT> created at line 61.
-    Found 14-bit adder for signal <baud_cnt[13]_GND_1_o_add_4_OUT> created at line 65.
-    Found 3-bit adder for signal <rx_bit_idx[2]_GND_1_o_add_24_OUT> created at line 96.
-    Found 3-bit adder for signal <bit_idx[2]_GND_1_o_add_51_OUT> created at line 135.
-    Found 4-bit adder for signal <msg_idx[3]_GND_1_o_add_55_OUT> created at line 143.
-    Found 14-bit 4-to-1 multiplexer for signal <rx_state[1]_rx_cnt[13]_wide_mux_39_OUT> created at line 70.
-    Found 1-bit 8-to-1 multiplexer for signal <bit_idx[2]_tx_shift[7]_Mux_49_o> created at line 131.
+    Found 10-bit adder for signal <baud_cnt[9]_GND_4_o_add_2_OUT> created at line 52.
+    Found 3-bit adder for signal <bit_idx[2]_GND_4_o_add_11_OUT> created at line 84.
+    Found 1-bit 4-to-1 multiplexer for signal <state[1]_tx_line_Mux_19_o> created at line 56.
     Summary:
-	inferred   6 Adder/Subtractor(s).
-	inferred  95 D-type flip-flop(s).
-	inferred  17 Multiplexer(s).
-	inferred   2 Finite State Machine(s).
-Unit <clk_probe> synthesized.
+	inferred   2 Adder/Subtractor(s).
+	inferred  23 D-type flip-flop(s).
+	inferred   9 Multiplexer(s).
+	inferred   1 Finite State Machine(s).
+Unit <uart_tx> synthesized.
 
 =========================================================================
 HDL Synthesis Report
 
 Macro Statistics
-# Adders/Subtractors                                   : 6
- 14-bit adder                                          : 1
- 14-bit subtractor                                     : 1
- 3-bit adder                                           : 2
- 32-bit adder                                          : 1
- 4-bit adder                                           : 1
-# Registers                                            : 10
- 1-bit register                                        : 1
- 14-bit register                                       : 2
- 3-bit register                                        : 2
- 32-bit register                                       : 1
- 4-bit register                                        : 1
- 8-bit register                                        : 3
-# Multiplexers                                         : 17
- 1-bit 2-to-1 multiplexer                              : 8
- 1-bit 8-to-1 multiplexer                              : 1
- 14-bit 2-to-1 multiplexer                             : 5
- 14-bit 4-to-1 multiplexer                             : 1
- 3-bit 2-to-1 multiplexer                              : 2
-# FSMs                                                 : 2
+# Adders/Subtractors                                   : 24
+ 10-bit adder                                          : 1
+ 2-bit adder                                           : 1
+ 2-bit subtractor                                      : 1
+ 21-bit adder                                          : 1
+ 3-bit adder                                           : 6
+ 32-bit adder                                          : 2
+ 4-bit subtractor                                      : 4
+ 5-bit adder                                           : 3
+ 6-bit subtractor                                      : 1
+ 7-bit subtractor                                      : 1
+ 8-bit adder                                           : 2
+ 8-bit subtractor                                      : 1
+# Registers                                            : 62
+ 1-bit register                                        : 26
+ 10-bit register                                       : 1
+ 11-bit register                                       : 3
+ 15-bit register                                       : 3
+ 2-bit register                                        : 2
+ 21-bit register                                       : 1
+ 256-bit register                                      : 1
+ 3-bit register                                        : 6
+ 32-bit register                                       : 2
+ 4-bit register                                        : 4
+ 5-bit register                                        : 3
+ 64-bit register                                       : 3
+ 8-bit register                                        : 7
+# Comparators                                          : 9
+ 1-bit comparator equal                                : 2
+ 15-bit comparator equal                               : 1
+ 4-bit comparator equal                                : 2
+ 4-bit comparator greater                              : 2
+ 4-bit comparator lessequal                            : 1
+ 8-bit comparator equal                                : 1
+# Multiplexers                                         : 664
+ 1-bit 11-to-1 multiplexer                             : 1
+ 1-bit 15-to-1 multiplexer                             : 1
+ 1-bit 2-to-1 multiplexer                              : 555
+ 1-bit 256-to-1 multiplexer                            : 1
+ 1-bit 4-to-1 multiplexer                              : 3
+ 1-bit 64-to-1 multiplexer                             : 1
+ 11-bit 2-to-1 multiplexer                             : 3
+ 15-bit 2-to-1 multiplexer                             : 11
+ 2-bit 2-to-1 multiplexer                              : 1
+ 3-bit 2-to-1 multiplexer                              : 19
+ 32-bit 2-to-1 multiplexer                             : 1
+ 4-bit 2-to-1 multiplexer                              : 10
+ 5-bit 2-to-1 multiplexer                              : 35
+ 64-bit 2-to-1 multiplexer                             : 5
+ 64-bit 8-to-1 multiplexer                             : 1
+ 8-bit 2-to-1 multiplexer                              : 16
+# FSMs                                                 : 4
+# Xors                                                 : 4
+ 1-bit xor2                                            : 2
+ 15-bit xor2                                           : 2
 
 =========================================================================
 
@@ -206,42 +411,262 @@ Macro Statistics
 *                       Advanced HDL Synthesis                          *
 =========================================================================
 
+INFO:Xst:2261 - The FF/Latch <tx_data_36> in Unit <obd_node> is equivalent to the following 4 FFs/Latches, which will be removed : <tx_data_38> <tx_data_40> <tx_data_56> <tx_data_57> 
+INFO:Xst:2261 - The FF/Latch <tx_data_35> in Unit <obd_node> is equivalent to the following 4 FFs/Latches, which will be removed : <tx_data_42> <tx_data_43> <tx_data_48> <tx_data_54> 
+WARNING:Xst:1293 - FF/Latch <tx_data_19> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_18> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_17> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_16> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_15> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_14> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_13> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_12> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_11> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_10> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_9> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_8> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_7> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_6> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_5> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_4> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_3> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_2> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_1> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_0> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_dlc_2> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_dlc_1> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_dlc_0> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_id_4> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_id_2> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_id_1> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_id_0> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_63> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_62> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_61> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_60> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_59> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_55> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_53> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_52> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_51> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_50> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_49> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_47> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_46> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_45> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_44> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_41> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_39> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_32> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_28> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_27> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_26> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_25> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_24> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_23> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_22> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_21> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_data_20> has a constant value of 0 in block <obd_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_19> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_18> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_17> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_16> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_15> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_14> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_13> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_12> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_11> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_10> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_9> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_8> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_7> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_6> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_5> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_4> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_3> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_2> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_1> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_0> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_dlc_2> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_dlc_1> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_dlc_0> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_id_4> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_id_2> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_id_1> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_id_0> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_63> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_62> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_61> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_60> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_59> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_55> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_53> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_52> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_51> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_50> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_49> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_47> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_46> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_45> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_44> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_41> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_39> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_32> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_28> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_27> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_26> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_25> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_24> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_23> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_22> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_21> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1293 - FF/Latch <tx_msg_data_20> has a constant value of 0 in block <can_core>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:2677 - Node <rx_crc_recv_14> of sequential type is unconnected in block <can_core>.
+
+Synthesizing (advanced) Unit <can_simple_controller>.
+The following registers are absorbed into counter <tq_div_cnt>: 1 register on signal <tq_div_cnt>.
+The following registers are absorbed into counter <tq_cnt>: 1 register on signal <tq_cnt>.
+The following registers are absorbed into counter <idle_cnt>: 1 register on signal <idle_cnt>.
+The following registers are absorbed into counter <prep_byte_cnt>: 1 register on signal <prep_byte_cnt>.
+The following registers are absorbed into counter <tx_buf_len>: 1 register on signal <tx_buf_len>.
+Unit <can_simple_controller> synthesized (advanced).
 
 Synthesizing (advanced) Unit <clk_probe>.
 The following registers are absorbed into counter <cnt>: 1 register on signal <cnt>.
-The following registers are absorbed into counter <baud_cnt>: 1 register on signal <baud_cnt>.
-The following registers are absorbed into counter <rx_bit_idx>: 1 register on signal <rx_bit_idx>.
-The following registers are absorbed into counter <bit_idx>: 1 register on signal <bit_idx>.
-The following registers are absorbed into counter <msg_idx>: 1 register on signal <msg_idx>.
+The following registers are absorbed into counter <rst_cnt>: 1 register on signal <rst_cnt>.
 Unit <clk_probe> synthesized (advanced).
+
+Synthesizing (advanced) Unit <obd_can_node>.
+The following registers are absorbed into counter <hb_cnt>: 1 register on signal <hb_cnt>.
+Unit <obd_can_node> synthesized (advanced).
+
+Synthesizing (advanced) Unit <uart_tx>.
+The following registers are absorbed into counter <baud_cnt>: 1 register on signal <baud_cnt>.
+The following registers are absorbed into counter <bit_idx>: 1 register on signal <bit_idx>.
+Unit <uart_tx> synthesized (advanced).
+WARNING:Xst:2677 - Node <rx_crc_recv_14> of sequential type is unconnected in block <can_simple_controller>.
 
 =========================================================================
 Advanced HDL Synthesis Report
 
 Macro Statistics
-# Adders/Subtractors                                   : 1
- 14-bit subtractor                                     : 1
-# Counters                                             : 5
- 14-bit up counter                                     : 1
- 3-bit up counter                                      : 2
- 32-bit up counter                                     : 1
- 4-bit up counter                                      : 1
-# Registers                                            : 39
- Flip-Flops                                            : 39
-# Multiplexers                                         : 15
- 1-bit 2-to-1 multiplexer                              : 8
- 1-bit 8-to-1 multiplexer                              : 1
- 14-bit 2-to-1 multiplexer                             : 5
- 14-bit 4-to-1 multiplexer                             : 1
-# FSMs                                                 : 2
+# Adders/Subtractors                                   : 14
+ 2-bit subtractor                                      : 1
+ 3-bit adder                                           : 3
+ 4-bit subtractor                                      : 4
+ 5-bit adder                                           : 2
+ 6-bit subtractor                                      : 2
+ 8-bit adder                                           : 1
+ 8-bit subtractor                                      : 1
+# Counters                                             : 10
+ 10-bit up counter                                     : 1
+ 2-bit up counter                                      : 1
+ 21-bit up counter                                     : 1
+ 3-bit up counter                                      : 3
+ 32-bit up counter                                     : 2
+ 5-bit up counter                                      : 1
+ 8-bit up counter                                      : 1
+# Registers                                            : 636
+ Flip-Flops                                            : 636
+# Comparators                                          : 9
+ 1-bit comparator equal                                : 2
+ 15-bit comparator equal                               : 1
+ 4-bit comparator equal                                : 2
+ 4-bit comparator greater                              : 2
+ 4-bit comparator lessequal                            : 1
+ 8-bit comparator equal                                : 1
+# Multiplexers                                         : 672
+ 1-bit 11-to-1 multiplexer                             : 1
+ 1-bit 15-to-1 multiplexer                             : 1
+ 1-bit 2-to-1 multiplexer                              : 570
+ 1-bit 256-to-1 multiplexer                            : 1
+ 1-bit 4-to-1 multiplexer                              : 3
+ 1-bit 64-to-1 multiplexer                             : 1
+ 11-bit 2-to-1 multiplexer                             : 3
+ 15-bit 2-to-1 multiplexer                             : 11
+ 2-bit 2-to-1 multiplexer                              : 1
+ 3-bit 2-to-1 multiplexer                              : 16
+ 4-bit 2-to-1 multiplexer                              : 10
+ 5-bit 2-to-1 multiplexer                              : 34
+ 64-bit 2-to-1 multiplexer                             : 5
+ 64-bit 8-to-1 multiplexer                             : 1
+ 8-bit 2-to-1 multiplexer                              : 14
+# FSMs                                                 : 4
+# Xors                                                 : 4
+ 1-bit xor2                                            : 2
+ 15-bit xor2                                           : 2
 
 =========================================================================
 
 =========================================================================
 *                         Low Level Synthesis                           *
 =========================================================================
+WARNING:Xst:1293 - FF/Latch <tx_data_20> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_21> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_22> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_23> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_24> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_25> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_26> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_27> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_28> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_32> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_39> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_41> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_44> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_45> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_46> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_47> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_49> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_50> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_51> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_52> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_53> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_55> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_59> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_60> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_61> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_62> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_63> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_id_0> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_id_1> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_id_2> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_id_4> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_dlc_0> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_dlc_1> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_dlc_2> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_0> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_1> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_2> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_3> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_4> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_5> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_6> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_7> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_8> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_9> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_10> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_11> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_12> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_13> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_14> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_15> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_16> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_17> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_18> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_data_19> has a constant value of 0 in block <obd_can_node>. This FF/Latch will be trimmed during the optimization process.
+INFO:Xst:2261 - The FF/Latch <tx_data_36> in Unit <obd_can_node> is equivalent to the following 4 FFs/Latches, which will be removed : <tx_data_38> <tx_data_40> <tx_data_56> <tx_data_57> 
+INFO:Xst:2261 - The FF/Latch <tx_data_35> in Unit <obd_can_node> is equivalent to the following 4 FFs/Latches, which will be removed : <tx_data_42> <tx_data_43> <tx_data_48> <tx_data_54> 
+INFO:Xst:2261 - The FF/Latch <tx_data_29> in Unit <obd_can_node> is equivalent to the following 6 FFs/Latches, which will be removed : <tx_data_30> <tx_data_31> <tx_data_33> <tx_data_34> <tx_data_37> <tx_data_58> 
+INFO:Xst:2261 - The FF/Latch <tx_msg_dlc_0> in Unit <can_simple_controller> is equivalent to the following 2 FFs/Latches, which will be removed : <tx_msg_dlc_1> <tx_msg_dlc_2> 
+INFO:Xst:2261 - The FF/Latch <tx_msg_data_35> in Unit <can_simple_controller> is equivalent to the following 4 FFs/Latches, which will be removed : <tx_msg_data_42> <tx_msg_data_43> <tx_msg_data_48> <tx_msg_data_54> 
+INFO:Xst:2261 - The FF/Latch <tx_msg_data_29> in Unit <can_simple_controller> is equivalent to the following 6 FFs/Latches, which will be removed : <tx_msg_data_30> <tx_msg_data_31> <tx_msg_data_33> <tx_msg_data_34> <tx_msg_data_37> <tx_msg_data_58> 
+INFO:Xst:2261 - The FF/Latch <tx_msg_data_36> in Unit <can_simple_controller> is equivalent to the following 4 FFs/Latches, which will be removed : <tx_msg_data_38> <tx_msg_data_40> <tx_msg_data_56> <tx_msg_data_57> 
+INFO:Xst:2261 - The FF/Latch <tx_msg_id_0> in Unit <can_simple_controller> is equivalent to the following 50 FFs/Latches, which will be removed : <tx_msg_id_1> <tx_msg_id_2> <tx_msg_id_4> <tx_msg_data_0> <tx_msg_data_1> <tx_msg_data_2> <tx_msg_data_3> <tx_msg_data_4> <tx_msg_data_5> <tx_msg_data_6> <tx_msg_data_7> <tx_msg_data_8> <tx_msg_data_9> <tx_msg_data_10> <tx_msg_data_11> <tx_msg_data_12> <tx_msg_data_13> <tx_msg_data_14> <tx_msg_data_15> <tx_msg_data_16> <tx_msg_data_17> <tx_msg_data_18> <tx_msg_data_19> <tx_msg_data_20> <tx_msg_data_21> <tx_msg_data_22> <tx_msg_data_23> <tx_msg_data_24> <tx_msg_data_25> <tx_msg_data_26> <tx_msg_data_27> <tx_msg_data_28> <tx_msg_data_32> <tx_msg_data_39> <tx_msg_data_41> <tx_msg_data_44> <tx_msg_data_45> <tx_msg_data_46> <tx_msg_data_47> <tx_msg_data_49> <tx_msg_data_50> <tx_msg_data_51> <tx_msg_data_52> <tx_msg_data_53> <tx_msg_data_55> <tx_msg_data_59> <tx_msg_data_60> <tx_msg_data_61> <tx_msg_data_62> <tx_msg_data_63> 
+WARNING:Xst:1293 - FF/Latch <tx_msg_id_0> has a constant value of 0 in block <can_simple_controller>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <tx_msg_dlc_0> has a constant value of 0 in block <can_simple_controller>. This FF/Latch will be trimmed during the optimization process.
 Analyzing FSM <MFsm> for best encoding.
-Optimizing FSM <FSM_0> on signal <rx_state[1:2]> with user encoding.
+Optimizing FSM <obd_node/FSM_0> on signal <out_state[1:2]> with user encoding.
 -------------------
  State | Encoding
 -------------------
@@ -251,7 +676,45 @@ Optimizing FSM <FSM_0> on signal <rx_state[1:2]> with user encoding.
  11    | 11
 -------------------
 Analyzing FSM <MFsm> for best encoding.
-Optimizing FSM <FSM_1> on signal <state[1:2]> with user encoding.
+Optimizing FSM <obd_node/can_core/FSM_2> on signal <prep_state[1:4]> with user encoding.
+-------------------
+ State | Encoding
+-------------------
+ 0000  | 0000
+ 1100  | 1100
+ 0001  | 0001
+ 0010  | 0010
+ 0011  | 0011
+ 0100  | 0100
+ 0101  | 0101
+ 0110  | 0110
+ 0111  | 0111
+ 1000  | 1000
+ 1001  | 1001
+ 1010  | 1010
+ 1011  | 1011
+-------------------
+Analyzing FSM <MFsm> for best encoding.
+Optimizing FSM <obd_node/can_core/FSM_1> on signal <rx_state[1:4]> with user encoding.
+-------------------
+ State | Encoding
+-------------------
+ 0000  | 0000
+ 0001  | 0001
+ 0010  | 0010
+ 0011  | 0011
+ 0100  | 0100
+ 0101  | 0101
+ 0110  | 0110
+ 0111  | 0111
+ 1000  | 1000
+ 1001  | 1001
+ 1010  | 1010
+ 1011  | 1011
+ 1100  | 1100
+-------------------
+Analyzing FSM <MFsm> for best encoding.
+Optimizing FSM <obd_node/dbg_uart/FSM_3> on signal <state[1:2]> with user encoding.
 -------------------
  State | Encoding
 -------------------
@@ -260,22 +723,100 @@ Optimizing FSM <FSM_1> on signal <state[1:2]> with user encoding.
  10    | 10
  11    | 11
 -------------------
+WARNING:Xst:2677 - Node <rx_dlc_shift_3> of sequential type is unconnected in block <can_simple_controller>.
+WARNING:Xst:2677 - Node <rx_byte_shift_7> of sequential type is unconnected in block <can_simple_controller>.
 WARNING:Xst:2677 - Node <cnt_28> of sequential type is unconnected in block <clk_probe>.
 WARNING:Xst:2677 - Node <cnt_29> of sequential type is unconnected in block <clk_probe>.
 WARNING:Xst:2677 - Node <cnt_30> of sequential type is unconnected in block <clk_probe>.
 WARNING:Xst:2677 - Node <cnt_31> of sequential type is unconnected in block <clk_probe>.
 
 Optimizing unit <clk_probe> ...
-INFO:Xst:2261 - The FF/Latch <cnt_0> in Unit <clk_probe> is equivalent to the following FF/Latch, which will be removed : <baud_cnt_0> 
-INFO:Xst:2261 - The FF/Latch <cnt_1> in Unit <clk_probe> is equivalent to the following FF/Latch, which will be removed : <baud_cnt_1> 
-INFO:Xst:2261 - The FF/Latch <cnt_2> in Unit <clk_probe> is equivalent to the following FF/Latch, which will be removed : <baud_cnt_2> 
-INFO:Xst:2261 - The FF/Latch <cnt_3> in Unit <clk_probe> is equivalent to the following FF/Latch, which will be removed : <baud_cnt_3> 
+
+Optimizing unit <obd_can_node> ...
+
+Optimizing unit <can_simple_controller> ...
+
+Optimizing unit <uart_tx> ...
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_39> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_38> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_37> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_36> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_35> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_34> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_33> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_32> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_31> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_30> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_29> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_28> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_27> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_26> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_25> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_24> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_23> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_22> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_21> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_20> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_19> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_18> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_17> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_16> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_15> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_14> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_13> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_12> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_11> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_10> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_9> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_8> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_7> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_6> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_5> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_4> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_3> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_2> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_1> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/rx_data_0> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:2677 - Node <obd_node/can_core/tx_done> of sequential type is unconnected in block <clk_probe>.
+WARNING:Xst:1293 - FF/Latch <obd_node/dbg_uart/shifter_7> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/dbg_pid_1> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/dbg_pid_4> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/dbg_pid_5> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/dbg_pid_6> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/dbg_pid_7> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/resp_pid_1> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/resp_pid_4> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/resp_pid_5> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/resp_pid_6> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/resp_pid_7> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/dbg_byte_5> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/dbg_byte_7> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/hb_cnt_27> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/hb_cnt_28> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/hb_cnt_29> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/hb_cnt_30> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <obd_node/hb_cnt_31> has a constant value of 0 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+INFO:Xst:2261 - The FF/Latch <obd_node/tx_dlc_3> in Unit <clk_probe> is equivalent to the following 7 FFs/Latches, which will be removed : <obd_node/tx_id_10> <obd_node/tx_id_9> <obd_node/tx_id_8> <obd_node/tx_id_7> <obd_node/tx_id_6> <obd_node/tx_id_5> <obd_node/tx_id_3> 
+INFO:Xst:2261 - The FF/Latch <obd_node/dbg_pid_3> in Unit <clk_probe> is equivalent to the following FF/Latch, which will be removed : <obd_node/dbg_pid_2> 
+INFO:Xst:2261 - The FF/Latch <obd_node/hb_cnt_0> in Unit <clk_probe> is equivalent to the following FF/Latch, which will be removed : <obd_node/dbg_uart/baud_cnt_0> 
+INFO:Xst:2261 - The FF/Latch <obd_node/hb_cnt_1> in Unit <clk_probe> is equivalent to the following FF/Latch, which will be removed : <obd_node/dbg_uart/baud_cnt_1> 
+INFO:Xst:2261 - The FF/Latch <obd_node/resp_pid_3> in Unit <clk_probe> is equivalent to the following FF/Latch, which will be removed : <obd_node/resp_pid_2> 
+INFO:Xst:2261 - The FF/Latch <obd_node/can_core/tx_msg_dlc_3> in Unit <clk_probe> is equivalent to the following 7 FFs/Latches, which will be removed : <obd_node/can_core/tx_msg_id_10> <obd_node/can_core/tx_msg_id_9> <obd_node/can_core/tx_msg_id_8> <obd_node/can_core/tx_msg_id_7> <obd_node/can_core/tx_msg_id_6> <obd_node/can_core/tx_msg_id_5> <obd_node/can_core/tx_msg_id_3> 
 
 Mapping all equations...
 Building and optimizing final netlist ...
-Found area constraint ratio of 100 (+ 5) on block clk_probe, actual ratio is 1.
-FlipFlop rx_state_FSM_FFd1 has been replicated 1 time(s)
-FlipFlop rx_state_FSM_FFd2 has been replicated 1 time(s)
+Found area constraint ratio of 100 (+ 5) on block clk_probe, actual ratio is 12.
+FlipFlop obd_node/can_core/prep_bit_cnt_1 has been replicated 1 time(s)
+FlipFlop obd_node/can_core/prep_bit_cnt_2 has been replicated 1 time(s)
+FlipFlop obd_node/can_core/rx_bit_cnt_0 has been replicated 1 time(s)
+FlipFlop obd_node/can_core/rx_bit_cnt_1 has been replicated 2 time(s)
+FlipFlop obd_node/can_core/rx_state_FSM_FFd1 has been replicated 2 time(s)
+FlipFlop obd_node/can_core/rx_state_FSM_FFd2 has been replicated 2 time(s)
+FlipFlop obd_node/can_core/rx_state_FSM_FFd3 has been replicated 2 time(s)
+FlipFlop obd_node/can_core/rx_state_FSM_FFd4 has been replicated 3 time(s)
+FlipFlop obd_node/can_core/tq_cnt_1 has been replicated 1 time(s)
+FlipFlop obd_node/can_core/tx_buf_pos_0 has been replicated 1 time(s)
+FlipFlop obd_node/can_core/tx_buf_pos_1 has been replicated 1 time(s)
 
 Final Macro Processing ...
 
@@ -283,8 +824,8 @@ Final Macro Processing ...
 Final Register Report
 
 Macro Statistics
-# Registers                                            : 93
- Flip-Flops                                            : 93
+# Registers                                            : 565
+ Flip-Flops                                            : 565
 
 =========================================================================
 
@@ -307,22 +848,26 @@ Top Level Output File Name         : clk_probe.ngc
 
 Primitive and Black Box Usage:
 ------------------------------
-# BELS                             : 297
+# BELS                             : 1148
 #      GND                         : 1
-#      INV                         : 16
-#      LUT1                        : 41
-#      LUT2                        : 3
-#      LUT3                        : 8
-#      LUT4                        : 16
-#      LUT5                        : 52
-#      LUT6                        : 53
-#      MUXCY                       : 53
-#      MUXF7                       : 1
+#      INV                         : 8
+#      LUT1                        : 89
+#      LUT2                        : 15
+#      LUT3                        : 55
+#      LUT4                        : 58
+#      LUT5                        : 161
+#      LUT6                        : 516
+#      MUXCY                       : 94
+#      MUXF7                       : 42
+#      MUXF8                       : 16
 #      VCC                         : 1
-#      XORCY                       : 52
-# FlipFlops/Latches                : 93
-#      FD                          : 63
-#      FDE                         : 30
+#      XORCY                       : 92
+# FlipFlops/Latches                : 565
+#      FD                          : 39
+#      FDE                         : 21
+#      FDR                         : 102
+#      FDRE                        : 396
+#      FDS                         : 7
 # Clock Buffers                    : 1
 #      BUFGP                       : 1
 # IO Buffers                       : 6
@@ -336,16 +881,16 @@ Selected Device : 6slx16csg324-2
 
 
 Slice Logic Utilization: 
- Number of Slice Registers:              93  out of  18224     0%  
- Number of Slice LUTs:                  189  out of   9112     2%  
-    Number used as Logic:               189  out of   9112     2%  
+ Number of Slice Registers:             565  out of  18224     3%  
+ Number of Slice LUTs:                  902  out of   9112     9%  
+    Number used as Logic:               902  out of   9112     9%  
 
 Slice Logic Distribution: 
- Number of LUT Flip Flop pairs used:    191
-   Number with an unused Flip Flop:      98  out of    191    51%  
-   Number with an unused LUT:             2  out of    191     1%  
-   Number of fully used LUT-FF pairs:    91  out of    191    47%  
-   Number of unique control sets:         3
+ Number of LUT Flip Flop pairs used:    928
+   Number with an unused Flip Flop:     363  out of    928    39%  
+   Number with an unused LUT:            26  out of    928     2%  
+   Number of fully used LUT-FF pairs:   539  out of    928    58%  
+   Number of unique control sets:        25
 
 IO Utilization: 
  Number of IOs:                           8
@@ -375,7 +920,7 @@ Clock Information:
 -----------------------------------+------------------------+-------+
 Clock Signal                       | Clock buffer(FF name)  | Load  |
 -----------------------------------+------------------------+-------+
-clk_in                             | BUFGP                  | 93    |
+clk_in                             | BUFGP                  | 565   |
 -----------------------------------+------------------------+-------+
 
 Asynchronous Control Signals Information:
@@ -386,9 +931,9 @@ Timing Summary:
 ---------------
 Speed Grade: -2
 
-   Minimum period: 4.842ns (Maximum Frequency: 206.526MHz)
-   Minimum input arrival time before clock: 4.839ns
-   Maximum output required time after clock: 5.176ns
+   Minimum period: 7.115ns (Maximum Frequency: 140.548MHz)
+   Minimum input arrival time before clock: 2.083ns
+   Maximum output required time after clock: 6.646ns
    Maximum combinational path delay: No path found
 
 Timing Details:
@@ -397,68 +942,68 @@ All values displayed in nanoseconds (ns)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'clk_in'
-  Clock period: 4.842ns (frequency: 206.526MHz)
-  Total number of paths / destination ports: 1955 / 123
+  Clock period: 7.115ns (frequency: 140.548MHz)
+  Total number of paths / destination ports: 45127 / 1485
 -------------------------------------------------------------------------
-Delay:               4.842ns (Levels of Logic = 3)
-  Source:            baud_cnt_11 (FF)
-  Destination:       tx_shift_0 (FF)
+Delay:               7.115ns (Levels of Logic = 5)
+  Source:            obd_node/can_core/rx_state_FSM_FFd2_1 (FF)
+  Destination:       obd_node/can_core/rx_bit_cnt_4 (FF)
   Source Clock:      clk_in rising
   Destination Clock: clk_in rising
 
-  Data Path: baud_cnt_11 to tx_shift_0
+  Data Path: obd_node/can_core/rx_state_FSM_FFd2_1 to obd_node/can_core/rx_bit_cnt_4
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FD:C->Q               2   0.525   1.181  baud_cnt_11 (baud_cnt_11)
-     LUT6:I0->O           19   0.254   1.261  baud_tick<13>1 (baud_tick<13>)
-     LUT3:I2->O           11   0.254   1.039  baud_tick<13>3_rstpot (baud_tick<13>3_rstpot)
-     LUT6:I5->O            1   0.254   0.000  bit_idx_1_dpot1 (bit_idx_1_dpot1)
-     FDE:D                     0.074          bit_idx_1
+     FDR:C->Q              1   0.525   0.958  obd_node/can_core/rx_state_FSM_FFd2_1 (obd_node/can_core/rx_state_FSM_FFd2_1)
+     LUT4:I0->O           13   0.254   1.206  obd_node/can_core/rx_state_rx_state[3]_GND_3_o_equal_8_o1 (obd_node/can_core/rx_state[3]_GND_3_o_equal_8_o)
+     LUT6:I4->O            2   0.250   1.156  obd_node/can_core/sample_tick_tx_active_AND_17_o1_1 (obd_node/can_core/sample_tick_tx_active_AND_17_o1)
+     LUT6:I1->O           11   0.254   1.039  obd_node/can_core/Mmux_rx_bit_cnt[4]_rx_bit_cnt[4]_mux_140_OUT1271 (obd_node/can_core/Mmux_rx_bit_cnt[4]_rx_bit_cnt[4]_mux_140_OUT127)
+     LUT3:I2->O            1   0.254   0.910  obd_node/can_core/Mmux_rx_bit_cnt[4]_rx_bit_cnt[4]_mux_140_OUT94_SW0_SW1 (N87)
+     LUT6:I3->O            1   0.235   0.000  obd_node/can_core/Mmux_rx_bit_cnt[4]_rx_bit_cnt[4]_mux_140_OUT94 (obd_node/can_core/rx_bit_cnt[4]_rx_bit_cnt[4]_mux_140_OUT<2>)
+     FDRE:D                    0.074          obd_node/can_core/rx_bit_cnt_2
     ----------------------------------------
-    Total                      4.842ns (1.361ns logic, 3.481ns route)
-                                       (28.1% logic, 71.9% route)
+    Total                      7.115ns (1.846ns logic, 5.269ns route)
+                                       (25.9% logic, 74.1% route)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'clk_in'
-  Total number of paths / destination ports: 46 / 29
+  Total number of paths / destination ports: 1 / 1
 -------------------------------------------------------------------------
-Offset:              4.839ns (Levels of Logic = 3)
-  Source:            uart_rx_cp2102 (PAD)
-  Destination:       rx_cnt_4 (FF)
+Offset:              2.083ns (Levels of Logic = 1)
+  Source:            uart_rx_can (PAD)
+  Destination:       obd_node/can_core/can_rx_ff1 (FF)
   Destination Clock: clk_in rising
 
-  Data Path: uart_rx_cp2102 to rx_cnt_4
+  Data Path: uart_rx_can to obd_node/can_core/can_rx_ff1
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     IBUF:I->O            37   1.328   2.059  uart_rx_cp2102_IBUF (uart_rx_cp2102_IBUF)
-     LUT6:I0->O            3   0.254   0.874  Mmux_rx_state[1]_rx_cnt[13]_wide_mux_39_OUT1111 (Mmux_rx_state[1]_rx_cnt[13]_wide_mux_39_OUT111)
-     LUT6:I4->O            1   0.250   0.000  Mmux_rx_state[1]_rx_cnt[13]_wide_mux_39_OUT112 (rx_state[1]_rx_cnt[13]_wide_mux_39_OUT<6>)
-     FD:D                      0.074          rx_cnt_6
+     IBUF:I->O             1   1.328   0.681  uart_rx_can_IBUF (uart_rx_can_IBUF)
+     FDS:D                     0.074          obd_node/can_core/can_rx_ff1
     ----------------------------------------
-    Total                      4.839ns (1.906ns logic, 2.933ns route)
-                                       (39.4% logic, 60.6% route)
+    Total                      2.083ns (1.402ns logic, 0.681ns route)
+                                       (67.3% logic, 32.7% route)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'clk_in'
-  Total number of paths / destination ports: 2 / 2
+  Total number of paths / destination ports: 8 / 3
 -------------------------------------------------------------------------
-Offset:              5.176ns (Levels of Logic = 2)
-  Source:            tx_line (FF)
-  Destination:       uart_tx_cp2102_inv (PAD)
+Offset:              6.646ns (Levels of Logic = 2)
+  Source:            obd_node/can_core/rx_state_FSM_FFd4 (FF)
+  Destination:       uart_tx_can (PAD)
   Source Clock:      clk_in rising
 
-  Data Path: tx_line to uart_tx_cp2102_inv
+  Data Path: obd_node/can_core/rx_state_FSM_FFd4 to uart_tx_can
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FD:C->Q               4   0.525   0.803  tx_line (tx_line)
-     INV:I->O              1   0.255   0.681  uart_tx_cp2102_inv1_INV_0 (uart_tx_cp2102_inv_OBUF)
-     OBUF:I->O                 2.912          uart_tx_cp2102_inv_OBUF (uart_tx_cp2102_inv)
+     FDR:C->Q             53   0.525   2.274  obd_node/can_core/rx_state_FSM_FFd4 (obd_node/can_core/rx_state_FSM_FFd4)
+     LUT6:I1->O            1   0.254   0.681  obd_node/can_core/Mmux_can_tx11 (uart_tx_can_OBUF)
+     OBUF:I->O                 2.912          uart_tx_can_OBUF (uart_tx_can)
     ----------------------------------------
-    Total                      5.176ns (3.692ns logic, 1.484ns route)
-                                       (71.3% logic, 28.7% route)
+    Total                      6.646ns (3.691ns logic, 2.955ns route)
+                                       (55.5% logic, 44.5% route)
 
 =========================================================================
 
@@ -470,21 +1015,21 @@ Clock to Setup on destination clock clk_in
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk_in         |    4.842|         |         |         |
+clk_in         |    7.115|         |         |         |
 ---------------+---------+---------+---------+---------+
 
 =========================================================================
 
 
-Total REAL time to Xst completion: 2.00 secs
-Total CPU time to Xst completion: 1.73 secs
+Total REAL time to Xst completion: 7.00 secs
+Total CPU time to Xst completion: 6.89 secs
  
 --> 
 
 
-Total memory usage is 376408 kilobytes
+Total memory usage is 389228 kilobytes
 
 Number of errors   :    0 (   0 filtered)
-Number of warnings :    7 (   0 filtered)
-Number of infos    :    4 (   0 filtered)
+Number of warnings :  234 (   0 filtered)
+Number of infos    :   17 (   0 filtered)
 

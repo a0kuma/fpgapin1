@@ -1,15 +1,15 @@
 //! **************************************************************************
-// Written by: Map P.20131013 on Fri May 22 06:21:38 2026
+// Written by: Map P.20131013 on Fri May 22 07:50:37 2026
 //! **************************************************************************
 
 SCHEMATIC START;
-COMP "unused_out" LOCATE = SITE "T18" LEVEL 1;
-COMP "uart_tx_can" LOCATE = SITE "N15" LEVEL 1;
 COMP "uart_rx_cp2102" LOCATE = SITE "P16" LEVEL 1;
-COMP "uart_rx_can" LOCATE = SITE "P15" LEVEL 1;
-COMP "unused_led" LOCATE = SITE "C11" LEVEL 1;
-COMP "uart_tx_cp2102_inv" LOCATE = SITE "U17" LEVEL 1;
 COMP "slow_blink_clk_led" LOCATE = SITE "D11" LEVEL 1;
 COMP "clk_in" LOCATE = SITE "U10" LEVEL 1;
+COMP "uart_rx_can" LOCATE = SITE "P15" LEVEL 1;
+COMP "uart_tx_can" LOCATE = SITE "N15" LEVEL 1;
+COMP "unused_led" LOCATE = SITE "C11" LEVEL 1;
+COMP "unused_out" LOCATE = SITE "T18" LEVEL 1;
+COMP "uart_tx_cp2102_inv" LOCATE = SITE "U17" LEVEL 1;
 SCHEMATIC END;
 

@@ -14,11 +14,18 @@ localparam integer CAN_BITRATE = 500_000;
 localparam integer UART_BAUD = 115200;
 
 reg [31:0] cnt = 32'd0;
+reg [20:0] rst_cnt = 21'd0;
+reg reset = 1'b1;
+
 always @(posedge clk_in) begin
     cnt <= cnt + 1'b1;
+    if (reset) begin
+        rst_cnt <= rst_cnt + 1'b1;
+        if (rst_cnt == 21'h1FFFFF) begin
+            reset <= 1'b0;
+        end
+    end
 end
-
-wire reset = ~cnt[20];
 
 wire can_tx;
 wire dbg_uart_tx;

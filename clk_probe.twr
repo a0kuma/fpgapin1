@@ -33,20 +33,21 @@ Data Sheet report:
 All values displayed in nanoseconds (ns)
 
 Setup/Hold to clock clk_in
---------------+------------+------------+------------+------------+------------------+--------+
-              |Max Setup to|  Process   |Max Hold to |  Process   |                  | Clock  |
-Source        | clk (edge) |   Corner   | clk (edge) |   Corner   |Internal Clock(s) | Phase  |
---------------+------------+------------+------------+------------+------------------+--------+
-uart_rx_cp2102|    4.419(R)|      SLOW  |   -1.024(R)|      FAST  |clk_in_BUFGP      |   0.000|
---------------+------------+------------+------------+------------+------------------+--------+
+------------+------------+------------+------------+------------+------------------+--------+
+            |Max Setup to|  Process   |Max Hold to |  Process   |                  | Clock  |
+Source      | clk (edge) |   Corner   | clk (edge) |   Corner   |Internal Clock(s) | Phase  |
+------------+------------+------------+------------+------------+------------------+--------+
+uart_rx_can |    1.034(R)|      SLOW  |    0.053(R)|      SLOW  |clk_in_BUFGP      |   0.000|
+------------+------------+------------+------------+------------+------------------+--------+
 
 Clock clk_in to Pad
 ------------------+-----------------+------------+-----------------+------------+------------------+--------+
                   |Max (slowest) clk|  Process   |Min (fastest) clk|  Process   |                  | Clock  |
 Destination       |  (edge) to PAD  |   Corner   |  (edge) to PAD  |   Corner   |Internal Clock(s) | Phase  |
 ------------------+-----------------+------------+-----------------+------------+------------------+--------+
-slow_blink_clk_led|        13.132(R)|      SLOW  |         7.050(R)|      FAST  |clk_in_BUFGP      |   0.000|
-uart_tx_cp2102_inv|        11.933(R)|      SLOW  |         5.592(R)|      FAST  |clk_in_BUFGP      |   0.000|
+slow_blink_clk_led|        11.444(R)|      SLOW  |         6.126(R)|      FAST  |clk_in_BUFGP      |   0.000|
+uart_tx_can       |        11.790(R)|      SLOW  |         4.885(R)|      FAST  |clk_in_BUFGP      |   0.000|
+uart_tx_cp2102_inv|        10.742(R)|      SLOW  |         4.946(R)|      FAST  |clk_in_BUFGP      |   0.000|
 ------------------+-----------------+------------+-----------------+------------+------------------+--------+
 
 Clock to Setup on destination clock clk_in
@@ -54,18 +55,18 @@ Clock to Setup on destination clock clk_in
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk_in         |    3.974|         |         |         |
+clk_in         |    7.082|         |         |         |
 ---------------+---------+---------+---------+---------+
 
 
-Analysis completed Fri May 22 06:21:49 2026 
+Analysis completed Fri May 22 07:50:50 2026 
 --------------------------------------------------------------------------------
 
 Trace Settings:
 -------------------------
 Trace Settings 
 
-Peak Memory Usage: 378 MB
+Peak Memory Usage: 389 MB
 
 
 
