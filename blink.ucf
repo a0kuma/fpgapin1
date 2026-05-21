@@ -1,7 +1,10 @@
 NET "clk_in" LOC = "U10" | IOSTANDARD = LVCMOS33;
 
-NET "led<0>" LOC = "D11" | IOSTANDARD = LVCMOS33 | DRIVE = 2 | SLEW = SLOW;
-NET "led<1>" LOC = "C11" | IOSTANDARD = LVCMOS33 | DRIVE = 2 | SLEW = SLOW;
+NET "slow_blink_clk_led" LOC = "D11" | IOSTANDARD = LVCMOS33 | DRIVE = 2 | SLEW = SLOW;
+NET "unused_led" LOC = "C11" | IOSTANDARD = LVCMOS33 | DRIVE = 2 | SLEW = SLOW;
 
-NET "pin_out[0]" LOC = "T18" | IOSTANDARD = LVCMOS33;
-NET "pin_out[1]" LOC = "P16" | IOSTANDARD = LVCMOS33;
+NET "unused_out" LOC = "T18" | IOSTANDARD = LVCMOS33;
+NET "uart_tx_can" LOC = "N15" | IOSTANDARD = LVCMOS33;
+NET "uart_tx_cp2102_inv" LOC = "U17" | IOSTANDARD = LVCMOS33;
+NET "uart_rx_can" LOC = "P15" | IOSTANDARD = LVCMOS33;
+NET "uart_rx_cp2102" LOC = "P16" | IOSTANDARD = LVCMOS33;

@@ -5,7 +5,7 @@
     The structure and the elements are likely to change over the next few releases.
     This means code written to parse this file will need to be revisited each subsequent release.-->
 
-  <application stringID="NgdBuild" timeStamp="Wed May 20 07:26:35 2026">
+  <application stringID="NgdBuild" timeStamp="Fri May 22 06:21:31 2026">
     <section stringID="User_Env">
       <table stringID="User_EnvVar">
         <column stringID="variable"/>
@@ -32,7 +32,7 @@
         </row>
         <row stringID="row" value="5">
           <item stringID="variable" value="PATH"/>
-          <item stringID="value" value="/opt/Xilinx/14.7/ISE_DS/ISE//bin/lin64:/opt/Xilinx/14.7/ISE_DS/ISE/bin/lin64:/opt/Xilinx/14.7/ISE_DS/ISE/sysgen/util:/opt/Xilinx/14.7/ISE_DS/ISE/../../../DocNav:/opt/Xilinx/14.7/ISE_DS/PlanAhead/bin:/opt/Xilinx/14.7/ISE_DS/EDK/bin/lin64:/opt/Xilinx/14.7/ISE_DS/EDK/gnu/microblaze/lin/bin:/opt/Xilinx/14.7/ISE_DS/EDK/gnu/powerpc-eabi/lin/bin:/opt/Xilinx/14.7/ISE_DS/EDK/gnu/arm/lin/bin:/opt/Xilinx/14.7/ISE_DS/EDK/gnu/microblaze/linux_toolchain/lin64_be/bin:/opt/Xilinx/14.7/ISE_DS/EDK/gnu/microblaze/linux_toolchain/lin64_le/bin:/opt/Xilinx/14.7/ISE_DS/common/bin/lin64:/home/andy/go/bin:/usr/local/cuda-13.0/bin:/home/andy/.config/Code/User/globalStorage/github.copilot-chat/debugCommand:/home/andy/.config/Code/User/globalStorage/github.copilot-chat/copilotCli:/home/andy/.nvm/versions/node/v18.20.8/bin:/home/andy/anaconda3/bin:/home/andy/anaconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/andy/.vscode/extensions/ms-python.debugpy-2026.6.0-linux-x64/bundled/scripts/noConfigScripts"/>
+          <item stringID="value" value="/opt/Xilinx/14.7/ISE_DS/ISE//bin/lin64:/opt/Xilinx/14.7/ISE_DS/ISE/bin/lin64:/opt/Xilinx/14.7/ISE_DS/ISE/sysgen/util:/opt/Xilinx/14.7/ISE_DS/ISE/../../../DocNav:/opt/Xilinx/14.7/ISE_DS/PlanAhead/bin:/opt/Xilinx/14.7/ISE_DS/EDK/bin/lin64:/opt/Xilinx/14.7/ISE_DS/EDK/gnu/microblaze/lin/bin:/opt/Xilinx/14.7/ISE_DS/EDK/gnu/powerpc-eabi/lin/bin:/opt/Xilinx/14.7/ISE_DS/EDK/gnu/arm/lin/bin:/opt/Xilinx/14.7/ISE_DS/EDK/gnu/microblaze/linux_toolchain/lin64_be/bin:/opt/Xilinx/14.7/ISE_DS/EDK/gnu/microblaze/linux_toolchain/lin64_le/bin:/opt/Xilinx/14.7/ISE_DS/common/bin/lin64:/home/andy/verilog_workspace/assume_board_is_nexys3/.venv/bin:/home/andy/go/bin:/usr/local/cuda-13.0/bin:/home/andy/.config/Code/User/globalStorage/github.copilot-chat/debugCommand:/home/andy/.config/Code/User/globalStorage/github.copilot-chat/copilotCli:/home/andy/.nvm/versions/node/v18.20.8/bin:/home/andy/anaconda3/bin:/home/andy/anaconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/andy/.vscode/extensions/ms-python.debugpy-2026.6.0-linux-x64/bundled/scripts/noConfigScripts"/>
         </row>
       </table>
       <item stringID="User_EnvOs" value="OS Information">
@@ -67,38 +67,42 @@
       </section>
       <section stringID="NGDBUILD_PRE_UNISIM_SUMMARY">
         <item dataType="int" stringID="NGDBUILD_NUM_BUFGP" value="1"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_FD" value="50"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_FDE" value="10"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_FD" value="63"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_FDE" value="30"/>
         <item dataType="int" stringID="NGDBUILD_NUM_GND" value="1"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_INV" value="3"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_LUT1" value="40"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_LUT2" value="1"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_LUT3" value="3"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_LUT4" value="1"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_LUT5" value="24"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_LUT6" value="25"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_MUXCY" value="40"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_OBUF" value="4"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_IBUF" value="1"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_INV" value="16"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_LUT1" value="41"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_LUT2" value="3"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_LUT3" value="8"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_LUT4" value="16"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_LUT5" value="52"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_LUT6" value="53"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_MUXCY" value="53"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_MUXF7" value="1"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_OBUF" value="5"/>
         <item dataType="int" stringID="NGDBUILD_NUM_VCC" value="1"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_XORCY" value="42"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_XORCY" value="52"/>
       </section>
       <section stringID="NGDBUILD_POST_UNISIM_SUMMARY">
         <item dataType="int" stringID="NGDBUILD_NUM_BUFG" value="1"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_FD" value="50"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_FDE" value="10"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_FD" value="63"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_FDE" value="30"/>
         <item dataType="int" stringID="NGDBUILD_NUM_GND" value="1"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_IBUF" value="2"/>
         <item dataType="int" stringID="NGDBUILD_NUM_IBUFG" value="1"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_INV" value="3"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_LUT1" value="40"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_LUT2" value="1"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_LUT3" value="3"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_LUT4" value="1"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_LUT5" value="24"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_LUT6" value="25"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_MUXCY" value="40"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_OBUF" value="4"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_INV" value="16"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_LUT1" value="41"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_LUT2" value="3"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_LUT3" value="8"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_LUT4" value="16"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_LUT5" value="52"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_LUT6" value="53"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_MUXCY" value="53"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_MUXF7" value="1"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_OBUF" value="5"/>
         <item dataType="int" stringID="NGDBUILD_NUM_VCC" value="1"/>
-        <item dataType="int" stringID="NGDBUILD_NUM_XORCY" value="42"/>
+        <item dataType="int" stringID="NGDBUILD_NUM_XORCY" value="52"/>
       </section>
       <section stringID="NGDBUILD_CORE_GENERATION_SUMMARY">
         <section stringID="NGDBUILD_CORE_INSTANCES"/>

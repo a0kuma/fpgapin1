@@ -5,14 +5,14 @@ Parameter TMPDIR set to xst/projnav.tmp
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.01 secs
+Total CPU time to Xst completion: 0.02 secs
  
 --> 
 Parameter xsthdpdir set to xst
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.01 secs
+Total CPU time to Xst completion: 0.02 secs
  
 --> 
 Reading design: clk_probe.prj
@@ -116,6 +116,8 @@ Parsing module <clk_probe>.
 =========================================================================
 
 Elaborating module <clk_probe>.
+WARNING:HDLCompiler:413 - "/home/andy/verilog_workspace/assume_board_is_nexys3/index.v" Line 81: Result of 15-bit expression is truncated to fit in 14-bit target.
+WARNING:HDLCompiler:413 - "/home/andy/verilog_workspace/assume_board_is_nexys3/index.v" Line 98: Result of 15-bit expression is truncated to fit in 14-bit target.
 
 =========================================================================
 *                           HDL Synthesis                               *
@@ -123,15 +125,31 @@ Elaborating module <clk_probe>.
 
 Synthesizing Unit <clk_probe>.
     Related source file is "/home/andy/verilog_workspace/assume_board_is_nexys3/index.v".
-        PIN_COUNT = 2
+WARNING:Xst:647 - Input <uart_rx_can> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
     Found 14-bit register for signal <baud_cnt>.
+    Found 8-bit register for signal <last_rx>.
+    Found 2-bit register for signal <rx_state>.
+    Found 14-bit register for signal <rx_cnt>.
+    Found 8-bit register for signal <rx_shift>.
+    Found 3-bit register for signal <rx_bit_idx>.
     Found 1-bit register for signal <tx_line>.
     Found 4-bit register for signal <msg_idx>.
     Found 2-bit register for signal <state>.
     Found 3-bit register for signal <bit_idx>.
     Found 8-bit register for signal <tx_shift>.
     Found 32-bit register for signal <cnt>.
-    Found finite state machine <FSM_0> for signal <state>.
+    Found finite state machine <FSM_0> for signal <rx_state>.
+    -----------------------------------------------------------------------
+    | States             | 4                                              |
+    | Transitions        | 10                                             |
+    | Inputs             | 3                                              |
+    | Outputs            | 2                                              |
+    | Clock              | clk_in (rising_edge)                           |
+    | Power Up State     | 00                                             |
+    | Encoding           | auto                                           |
+    | Implementation     | LUT                                            |
+    -----------------------------------------------------------------------
+    Found finite state machine <FSM_1> for signal <state>.
     -----------------------------------------------------------------------
     | States             | 4                                              |
     | Transitions        | 9                                              |
@@ -142,42 +160,45 @@ Synthesizing Unit <clk_probe>.
     | Encoding           | auto                                           |
     | Implementation     | LUT                                            |
     -----------------------------------------------------------------------
-    Found 32-bit adder for signal <cnt[31]_GND_1_o_add_2_OUT> created at line 44.
-    Found 14-bit adder for signal <baud_cnt[13]_GND_1_o_add_4_OUT> created at line 48.
-    Found 3-bit adder for signal <bit_idx[2]_GND_1_o_add_12_OUT> created at line 70.
-    Found 4-bit adder for signal <msg_idx[3]_GND_1_o_add_16_OUT> created at line 78.
-    Found 16x8-bit Read Only RAM for signal <msg_idx[3]_GND_1_o_wide_mux_9_OUT>
-    Found 1-bit 8-to-1 multiplexer for signal <bit_idx[2]_tx_shift[7]_Mux_10_o> created at line 66.
+    Found 14-bit subtractor for signal <rx_cnt[13]_GND_1_o_sub_34_OUT> created at line 108.
+    Found 32-bit adder for signal <cnt[31]_GND_1_o_add_2_OUT> created at line 61.
+    Found 14-bit adder for signal <baud_cnt[13]_GND_1_o_add_4_OUT> created at line 65.
+    Found 3-bit adder for signal <rx_bit_idx[2]_GND_1_o_add_24_OUT> created at line 96.
+    Found 3-bit adder for signal <bit_idx[2]_GND_1_o_add_51_OUT> created at line 135.
+    Found 4-bit adder for signal <msg_idx[3]_GND_1_o_add_55_OUT> created at line 143.
+    Found 14-bit 4-to-1 multiplexer for signal <rx_state[1]_rx_cnt[13]_wide_mux_39_OUT> created at line 70.
+    Found 1-bit 8-to-1 multiplexer for signal <bit_idx[2]_tx_shift[7]_Mux_49_o> created at line 131.
     Summary:
-	inferred   1 RAM(s).
-	inferred   4 Adder/Subtractor(s).
-	inferred  62 D-type flip-flop(s).
-	inferred   2 Multiplexer(s).
-	inferred   1 Finite State Machine(s).
+	inferred   6 Adder/Subtractor(s).
+	inferred  95 D-type flip-flop(s).
+	inferred  17 Multiplexer(s).
+	inferred   2 Finite State Machine(s).
 Unit <clk_probe> synthesized.
 
 =========================================================================
 HDL Synthesis Report
 
 Macro Statistics
-# RAMs                                                 : 1
- 16x8-bit single-port Read Only RAM                    : 1
-# Adders/Subtractors                                   : 4
+# Adders/Subtractors                                   : 6
  14-bit adder                                          : 1
- 3-bit adder                                           : 1
+ 14-bit subtractor                                     : 1
+ 3-bit adder                                           : 2
  32-bit adder                                          : 1
  4-bit adder                                           : 1
-# Registers                                            : 6
+# Registers                                            : 10
  1-bit register                                        : 1
- 14-bit register                                       : 1
- 3-bit register                                        : 1
+ 14-bit register                                       : 2
+ 3-bit register                                        : 2
  32-bit register                                       : 1
  4-bit register                                        : 1
- 8-bit register                                        : 1
-# Multiplexers                                         : 2
+ 8-bit register                                        : 3
+# Multiplexers                                         : 17
+ 1-bit 2-to-1 multiplexer                              : 8
  1-bit 8-to-1 multiplexer                              : 1
- 3-bit 2-to-1 multiplexer                              : 1
-# FSMs                                                 : 1
+ 14-bit 2-to-1 multiplexer                             : 5
+ 14-bit 4-to-1 multiplexer                             : 1
+ 3-bit 2-to-1 multiplexer                              : 2
+# FSMs                                                 : 2
 
 =========================================================================
 
@@ -189,37 +210,30 @@ Macro Statistics
 Synthesizing (advanced) Unit <clk_probe>.
 The following registers are absorbed into counter <cnt>: 1 register on signal <cnt>.
 The following registers are absorbed into counter <baud_cnt>: 1 register on signal <baud_cnt>.
+The following registers are absorbed into counter <rx_bit_idx>: 1 register on signal <rx_bit_idx>.
 The following registers are absorbed into counter <bit_idx>: 1 register on signal <bit_idx>.
 The following registers are absorbed into counter <msg_idx>: 1 register on signal <msg_idx>.
-INFO:Xst:3231 - The small RAM <Mram_msg_idx[3]_GND_1_o_wide_mux_9_OUT> will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
-    -----------------------------------------------------------------------
-    | ram_type           | Distributed                         |          |
-    -----------------------------------------------------------------------
-    | Port A                                                              |
-    |     aspect ratio   | 16-word x 8-bit                     |          |
-    |     weA            | connected to signal <GND>           | high     |
-    |     addrA          | connected to signal <msg_idx>       |          |
-    |     diA            | connected to signal <GND>           |          |
-    |     doA            | connected to internal node          |          |
-    -----------------------------------------------------------------------
 Unit <clk_probe> synthesized (advanced).
 
 =========================================================================
 Advanced HDL Synthesis Report
 
 Macro Statistics
-# RAMs                                                 : 1
- 16x8-bit single-port distributed Read Only RAM        : 1
-# Counters                                             : 4
+# Adders/Subtractors                                   : 1
+ 14-bit subtractor                                     : 1
+# Counters                                             : 5
  14-bit up counter                                     : 1
- 3-bit up counter                                      : 1
+ 3-bit up counter                                      : 2
  32-bit up counter                                     : 1
  4-bit up counter                                      : 1
-# Registers                                            : 9
- Flip-Flops                                            : 9
-# Multiplexers                                         : 1
+# Registers                                            : 39
+ Flip-Flops                                            : 39
+# Multiplexers                                         : 15
+ 1-bit 2-to-1 multiplexer                              : 8
  1-bit 8-to-1 multiplexer                              : 1
-# FSMs                                                 : 1
+ 14-bit 2-to-1 multiplexer                             : 5
+ 14-bit 4-to-1 multiplexer                             : 1
+# FSMs                                                 : 2
 
 =========================================================================
 
@@ -227,7 +241,7 @@ Macro Statistics
 *                         Low Level Synthesis                           *
 =========================================================================
 Analyzing FSM <MFsm> for best encoding.
-Optimizing FSM <FSM_0> on signal <state[1:2]> with user encoding.
+Optimizing FSM <FSM_0> on signal <rx_state[1:2]> with user encoding.
 -------------------
  State | Encoding
 -------------------
@@ -236,20 +250,32 @@ Optimizing FSM <FSM_0> on signal <state[1:2]> with user encoding.
  10    | 10
  11    | 11
 -------------------
-WARNING:Xst:1426 - The value init of the FF/Latch tx_shift_7 hinder the constant cleaning in the block clk_probe.
-   You should achieve better results by setting this init to 0.
-WARNING:Xst:1293 - FF/Latch <tx_shift_5> has a constant value of 1 in block <clk_probe>. This FF/Latch will be trimmed during the optimization process.
+Analyzing FSM <MFsm> for best encoding.
+Optimizing FSM <FSM_1> on signal <state[1:2]> with user encoding.
+-------------------
+ State | Encoding
+-------------------
+ 00    | 00
+ 01    | 01
+ 10    | 10
+ 11    | 11
+-------------------
 WARNING:Xst:2677 - Node <cnt_28> of sequential type is unconnected in block <clk_probe>.
 WARNING:Xst:2677 - Node <cnt_29> of sequential type is unconnected in block <clk_probe>.
 WARNING:Xst:2677 - Node <cnt_30> of sequential type is unconnected in block <clk_probe>.
 WARNING:Xst:2677 - Node <cnt_31> of sequential type is unconnected in block <clk_probe>.
 
 Optimizing unit <clk_probe> ...
+INFO:Xst:2261 - The FF/Latch <cnt_0> in Unit <clk_probe> is equivalent to the following FF/Latch, which will be removed : <baud_cnt_0> 
+INFO:Xst:2261 - The FF/Latch <cnt_1> in Unit <clk_probe> is equivalent to the following FF/Latch, which will be removed : <baud_cnt_1> 
+INFO:Xst:2261 - The FF/Latch <cnt_2> in Unit <clk_probe> is equivalent to the following FF/Latch, which will be removed : <baud_cnt_2> 
+INFO:Xst:2261 - The FF/Latch <cnt_3> in Unit <clk_probe> is equivalent to the following FF/Latch, which will be removed : <baud_cnt_3> 
 
 Mapping all equations...
 Building and optimizing final netlist ...
-Found area constraint ratio of 100 (+ 5) on block clk_probe, actual ratio is 0.
-FlipFlop baud_cnt_10 has been replicated 1 time(s)
+Found area constraint ratio of 100 (+ 5) on block clk_probe, actual ratio is 1.
+FlipFlop rx_state_FSM_FFd1 has been replicated 1 time(s)
+FlipFlop rx_state_FSM_FFd2 has been replicated 1 time(s)
 
 Final Macro Processing ...
 
@@ -257,8 +283,8 @@ Final Macro Processing ...
 Final Register Report
 
 Macro Statistics
-# Registers                                            : 60
- Flip-Flops                                            : 60
+# Registers                                            : 93
+ Flip-Flops                                            : 93
 
 =========================================================================
 
@@ -281,25 +307,27 @@ Top Level Output File Name         : clk_probe.ngc
 
 Primitive and Black Box Usage:
 ------------------------------
-# BELS                             : 181
+# BELS                             : 297
 #      GND                         : 1
-#      INV                         : 3
-#      LUT1                        : 40
-#      LUT2                        : 1
-#      LUT3                        : 3
-#      LUT4                        : 1
-#      LUT5                        : 24
-#      LUT6                        : 25
-#      MUXCY                       : 40
+#      INV                         : 16
+#      LUT1                        : 41
+#      LUT2                        : 3
+#      LUT3                        : 8
+#      LUT4                        : 16
+#      LUT5                        : 52
+#      LUT6                        : 53
+#      MUXCY                       : 53
+#      MUXF7                       : 1
 #      VCC                         : 1
-#      XORCY                       : 42
-# FlipFlops/Latches                : 60
-#      FD                          : 50
-#      FDE                         : 10
+#      XORCY                       : 52
+# FlipFlops/Latches                : 93
+#      FD                          : 63
+#      FDE                         : 30
 # Clock Buffers                    : 1
 #      BUFGP                       : 1
-# IO Buffers                       : 4
-#      OBUF                        : 4
+# IO Buffers                       : 6
+#      IBUF                        : 1
+#      OBUF                        : 5
 
 Device utilization summary:
 ---------------------------
@@ -308,20 +336,20 @@ Selected Device : 6slx16csg324-2
 
 
 Slice Logic Utilization: 
- Number of Slice Registers:              60  out of  18224     0%  
- Number of Slice LUTs:                   97  out of   9112     1%  
-    Number used as Logic:                97  out of   9112     1%  
+ Number of Slice Registers:              93  out of  18224     0%  
+ Number of Slice LUTs:                  189  out of   9112     2%  
+    Number used as Logic:               189  out of   9112     2%  
 
 Slice Logic Distribution: 
- Number of LUT Flip Flop pairs used:     98
-   Number with an unused Flip Flop:      38  out of     98    38%  
-   Number with an unused LUT:             1  out of     98     1%  
-   Number of fully used LUT-FF pairs:    59  out of     98    60%  
-   Number of unique control sets:         2
+ Number of LUT Flip Flop pairs used:    191
+   Number with an unused Flip Flop:      98  out of    191    51%  
+   Number with an unused LUT:             2  out of    191     1%  
+   Number of fully used LUT-FF pairs:    91  out of    191    47%  
+   Number of unique control sets:         3
 
 IO Utilization: 
- Number of IOs:                           5
- Number of bonded IOBs:                   5  out of    232     2%  
+ Number of IOs:                           8
+ Number of bonded IOBs:                   7  out of    232     3%  
 
 Specific Feature Utilization:
  Number of BUFG/BUFGCTRLs:                1  out of     16     6%  
@@ -347,7 +375,7 @@ Clock Information:
 -----------------------------------+------------------------+-------+
 Clock Signal                       | Clock buffer(FF name)  | Load  |
 -----------------------------------+------------------------+-------+
-clk_in                             | BUFGP                  | 60    |
+clk_in                             | BUFGP                  | 93    |
 -----------------------------------+------------------------+-------+
 
 Asynchronous Control Signals Information:
@@ -358,9 +386,9 @@ Timing Summary:
 ---------------
 Speed Grade: -2
 
-   Minimum period: 4.199ns (Maximum Frequency: 238.152MHz)
-   Minimum input arrival time before clock: No path found
-   Maximum output required time after clock: 5.098ns
+   Minimum period: 4.842ns (Maximum Frequency: 206.526MHz)
+   Minimum input arrival time before clock: 4.839ns
+   Maximum output required time after clock: 5.176ns
    Maximum combinational path delay: No path found
 
 Timing Details:
@@ -369,47 +397,68 @@ All values displayed in nanoseconds (ns)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'clk_in'
-  Clock period: 4.199ns (frequency: 238.152MHz)
-  Total number of paths / destination ports: 1115 / 70
+  Clock period: 4.842ns (frequency: 206.526MHz)
+  Total number of paths / destination ports: 1955 / 123
 -------------------------------------------------------------------------
-Delay:               4.199ns (Levels of Logic = 3)
-  Source:            baud_cnt_3 (FF)
-  Destination:       msg_idx_3 (FF)
+Delay:               4.842ns (Levels of Logic = 3)
+  Source:            baud_cnt_11 (FF)
+  Destination:       tx_shift_0 (FF)
   Source Clock:      clk_in rising
   Destination Clock: clk_in rising
 
-  Data Path: baud_cnt_3 to msg_idx_3
+  Data Path: baud_cnt_11 to tx_shift_0
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FD:C->Q               3   0.525   1.221  baud_cnt_3 (baud_cnt_3)
-     LUT6:I0->O            2   0.254   0.954  baud_tick<13>1_1 (baud_tick<13>11)
-     LUT6:I3->O            1   0.235   0.682  _n00831 (_n0083)
-     LUT6:I5->O            1   0.254   0.000  msg_idx_3_rstpot (msg_idx_3_rstpot)
-     FD:D                      0.074          msg_idx_3
+     FD:C->Q               2   0.525   1.181  baud_cnt_11 (baud_cnt_11)
+     LUT6:I0->O           19   0.254   1.261  baud_tick<13>1 (baud_tick<13>)
+     LUT3:I2->O           11   0.254   1.039  baud_tick<13>3_rstpot (baud_tick<13>3_rstpot)
+     LUT6:I5->O            1   0.254   0.000  bit_idx_1_dpot1 (bit_idx_1_dpot1)
+     FDE:D                     0.074          bit_idx_1
     ----------------------------------------
-    Total                      4.199ns (1.342ns logic, 2.857ns route)
-                                       (32.0% logic, 68.0% route)
+    Total                      4.842ns (1.361ns logic, 3.481ns route)
+                                       (28.1% logic, 71.9% route)
+
+=========================================================================
+Timing constraint: Default OFFSET IN BEFORE for Clock 'clk_in'
+  Total number of paths / destination ports: 46 / 29
+-------------------------------------------------------------------------
+Offset:              4.839ns (Levels of Logic = 3)
+  Source:            uart_rx_cp2102 (PAD)
+  Destination:       rx_cnt_4 (FF)
+  Destination Clock: clk_in rising
+
+  Data Path: uart_rx_cp2102 to rx_cnt_4
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     IBUF:I->O            37   1.328   2.059  uart_rx_cp2102_IBUF (uart_rx_cp2102_IBUF)
+     LUT6:I0->O            3   0.254   0.874  Mmux_rx_state[1]_rx_cnt[13]_wide_mux_39_OUT1111 (Mmux_rx_state[1]_rx_cnt[13]_wide_mux_39_OUT111)
+     LUT6:I4->O            1   0.250   0.000  Mmux_rx_state[1]_rx_cnt[13]_wide_mux_39_OUT112 (rx_state[1]_rx_cnt[13]_wide_mux_39_OUT<6>)
+     FD:D                      0.074          rx_cnt_6
+    ----------------------------------------
+    Total                      4.839ns (1.906ns logic, 2.933ns route)
+                                       (39.4% logic, 60.6% route)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'clk_in'
   Total number of paths / destination ports: 2 / 2
 -------------------------------------------------------------------------
-Offset:              5.098ns (Levels of Logic = 2)
+Offset:              5.176ns (Levels of Logic = 2)
   Source:            tx_line (FF)
-  Destination:       pin_out<0> (PAD)
+  Destination:       uart_tx_cp2102_inv (PAD)
   Source Clock:      clk_in rising
 
-  Data Path: tx_line to pin_out<0>
+  Data Path: tx_line to uart_tx_cp2102_inv
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FD:C->Q               2   0.525   0.725  tx_line (tx_line)
-     INV:I->O              1   0.255   0.681  pin_out<0>1_INV_0 (pin_out_0_OBUF)
-     OBUF:I->O                 2.912          pin_out_0_OBUF (pin_out<0>)
+     FD:C->Q               4   0.525   0.803  tx_line (tx_line)
+     INV:I->O              1   0.255   0.681  uart_tx_cp2102_inv1_INV_0 (uart_tx_cp2102_inv_OBUF)
+     OBUF:I->O                 2.912          uart_tx_cp2102_inv_OBUF (uart_tx_cp2102_inv)
     ----------------------------------------
-    Total                      5.098ns (3.692ns logic, 1.406ns route)
-                                       (72.4% logic, 27.6% route)
+    Total                      5.176ns (3.692ns logic, 1.484ns route)
+                                       (71.3% logic, 28.7% route)
 
 =========================================================================
 
@@ -421,21 +470,21 @@ Clock to Setup on destination clock clk_in
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-clk_in         |    4.199|         |         |         |
+clk_in         |    4.842|         |         |         |
 ---------------+---------+---------+---------+---------+
 
 =========================================================================
 
 
-Total REAL time to Xst completion: 1.00 secs
-Total CPU time to Xst completion: 1.63 secs
+Total REAL time to Xst completion: 2.00 secs
+Total CPU time to Xst completion: 1.73 secs
  
 --> 
 
 
-Total memory usage is 375884 kilobytes
+Total memory usage is 376408 kilobytes
 
 Number of errors   :    0 (   0 filtered)
-Number of warnings :    6 (   0 filtered)
-Number of infos    :    1 (   0 filtered)
+Number of warnings :    7 (   0 filtered)
+Number of infos    :    4 (   0 filtered)
 
