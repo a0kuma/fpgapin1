@@ -148,8 +148,20 @@ assign rx_start_pulse = (rx_state == RX_IDLE) && !tx_active && can_rx_fall;
 assign tx_start_pulse = (!tx_active && tx_pending && bus_idle && rx_state == RX_IDLE && bit_end_tick);
 assign hard_sync_pulse = rx_start_pulse || tx_start_pulse;
 
-wire ack_active = (rx_state == RX_ACK) && rx_frame_ok;
-assign can_tx = tx_active ? tx_bit : (ack_active ? 1'b0 : 1'b1);
+reg drive_ack = 1'b0;
+always @(posedge clk) begin
+    if (reset) begin
+        drive_ack <= 1'b0;
+    end else if (bit_end_tick) begin
+        if (rx_state == RX_ACK && rx_frame_ok) begin
+            drive_ack <= 1'b1;
+        end else begin
+            drive_ack <= 1'b0;
+        end
+    end
+end
+
+assign can_tx = tx_active ? tx_bit : (drive_ack ? 1'b0 : 1'b1);
 
 always @(posedge clk) begin
     if (reset) begin

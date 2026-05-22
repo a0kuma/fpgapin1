@@ -11,51 +11,82 @@ module obd_can_node #(
     output wire uart_tx
 );
 
-localparam [10:0] OBD_ID_FUNC = 11'h7DF;
-localparam [10:0] OBD_ID_PHYS = 11'h7E0;
-localparam [10:0] OBD_ID_RESP = 11'h7E8;
+// OBD-II CAN IDs
+localparam [10:0] OBD_ID_FUNC = 11'h7DF; // Functional broadcast request
+localparam [10:0] OBD_ID_PHYS = 11'h7E0; // Physical request to ECU #1
+localparam [10:0] OBD_ID_RESP = 11'h7E8; // Response from ECU #1
 
-localparam [15:0] RPM_RAW = 16'd12000; // 3000 RPM * 4
-localparam [7:0] SPEED_KPH = 8'd88;
+// Dummy sensor data
+localparam [15:0] RPM_RAW   = 16'd12000; // 3000 RPM * 4
+localparam [7:0]  SPEED_KPH = 8'd88;     // 88 km/h
 
-wire rx_valid;
+// Supported PIDs bitmask for PID 00 response
+// Supports PID 0C (RPM) and PID 0D (Speed)
+// PID 0C -> bit (32-12)=20, PID 0D -> bit (32-13)=19
+// Combined: 0x00180000
+localparam [31:0] SUPPORTED_PIDS = 32'h00180000;
+
+// ----- CAN controller interface -----
+wire        rx_valid;
 wire [10:0] rx_id;
-wire [3:0] rx_dlc;
+wire [3:0]  rx_dlc;
 wire [63:0] rx_data;
 
-reg tx_start = 1'b0;
-reg [10:0] tx_id = 11'd0;
-reg [3:0] tx_dlc = 4'd0;
-reg [63:0] tx_data = 64'd0;
-wire tx_busy;
-wire tx_done;
+reg         tx_start = 1'b0;
+reg  [10:0] tx_id    = 11'd0;
+reg  [3:0]  tx_dlc   = 4'd0;
+reg  [63:0] tx_data  = 64'd0;
+wire        tx_busy;
+wire        tx_done;
 
-reg resp_pending = 1'b0;
-reg [7:0] resp_pid = 8'd0;
+// ----- Response state -----
+reg       resp_pending = 1'b0;
+reg [7:0] resp_pid     = 8'd0;
 
-wire [7:0] rx_b0 = rx_data[63:56];
-wire [7:0] rx_b1 = rx_data[55:48];
-wire [7:0] rx_b2 = rx_data[47:40];
-
-wire is_obd_id = (rx_id == OBD_ID_FUNC) || (rx_id == OBD_ID_PHYS);
-wire is_obd_req = is_obd_id && (rx_dlc >= 4'd3) && (rx_b0 == 8'h02) && (rx_b1 == 8'h01);
-wire is_pid_supported = (rx_b2 == 8'h0C) || (rx_b2 == 8'h0D);
+// Convenience wires for received data bytes
+wire [7:0] rx_b0 = rx_data[63:56]; // PCI byte
+wire [7:0] rx_b1 = rx_data[55:48]; // Service ID (0x01 = current data)
+wire [7:0] rx_b2 = rx_data[47:40]; // PID
 
 wire [7:0] rpm_a = RPM_RAW[15:8];
 wire [7:0] rpm_b = RPM_RAW[7:0];
 
-reg dbg_start = 1'b0;
-reg [7:0] dbg_byte = 8'd0;
-wire dbg_busy;
-reg dbg_pending = 1'b0;
-reg [7:0] dbg_pid = 8'd0;
-reg [1:0] out_state = 2'd0;
-reg [1:0] out_kind = 2'd0;
+wire is_obd_id  = (rx_id == OBD_ID_FUNC) || (rx_id == OBD_ID_PHYS);
+wire is_obd_req = is_obd_id && (rx_dlc >= 4'd3) && (rx_b0 == 8'h02) && (rx_b1 == 8'h01);
+wire is_pid_supported = (rx_b2 == 8'h00) || (rx_b2 == 8'h0C) || (rx_b2 == 8'h0D);
 
+// ----- Debug UART interface -----
+reg        dbg_start = 1'b0;
+reg  [7:0] dbg_byte  = 8'd0;
+wire       dbg_busy;
+
+// ----- Debug output state -----
+reg [3:0] out_state   = 4'd0;
+reg [1:0] out_kind    = 2'd0;  // 1=R (obd request log), 2=H (heartbeat)
+reg       dbg_pending = 1'b0;
+reg [7:0] dbg_pid     = 8'd0;
+
+// CAN RX edge detection (runs continuously)
+reg can_rx_d1 = 1'b1;
+reg can_rx_d2 = 1'b1;
+reg rx_edge_seen_latched = 1'b0;
+
+// TX event tracking (cleared each heartbeat)
+reg tx_attempted = 1'b0;
+reg tx_done_seen = 1'b0;
+
+// Heartbeat timer (1 second)
 localparam integer HB_INTERVAL = CLK_HZ;
-reg [31:0] hb_cnt = 32'd0;
-reg hb_pending = 1'b0;
+reg [31:0] hb_cnt     = 32'd0;
+reg        hb_pending = 1'b0;
 
+// Periodic test TX timer (2 seconds) - loopback diagnostic
+localparam integer TEST_TX_INTERVAL = CLK_HZ * 2;
+reg [31:0] test_tx_cnt = 32'd0;
+
+// =============================================
+// Instantiate CAN controller
+// =============================================
 can_simple_controller #(
     .CLK_HZ(CLK_HZ),
     .CAN_BITRATE(CAN_BITRATE)
@@ -76,6 +107,9 @@ can_simple_controller #(
     .rx_data(rx_data)
 );
 
+// =============================================
+// Instantiate debug UART TX
+// =============================================
 uart_tx #(
     .CLK_HZ(CLK_HZ),
     .BAUD(UART_BAUD)
@@ -88,106 +122,208 @@ uart_tx #(
     .tx_line(uart_tx)
 );
 
+// =============================================
+// OBD Response + Periodic Test TX
+// =============================================
 always @(posedge clk) begin
     if (reset) begin
         resp_pending <= 1'b0;
-        resp_pid <= 8'd0;
+        resp_pid     <= 8'd0;
+        test_tx_cnt  <= 32'd0;
     end else begin
+        // --- Periodic test TX (every 2 seconds) ---
+        // Sends a dummy CAN frame to test transceiver loopback.
+        // If the SN65HVD230 is working, we should see edges on can_rx.
+        if (test_tx_cnt >= TEST_TX_INTERVAL - 1) begin
+            test_tx_cnt <= 32'd0;
+            if (!resp_pending && !tx_busy) begin
+                resp_pending <= 1'b1;
+                resp_pid     <= 8'h0C; // Test with RPM response
+            end
+        end else begin
+            test_tx_cnt <= test_tx_cnt + 1'b1;
+        end
+
+        // --- Real OBD request detection (overrides test) ---
         if (rx_valid && is_obd_req && is_pid_supported) begin
             if (!resp_pending) begin
                 resp_pending <= 1'b1;
-                resp_pid <= rx_b2;
+                resp_pid     <= rx_b2;
             end
         end
 
+        // --- TX response construction ---
         tx_start <= 1'b0;
         if (resp_pending && !tx_busy) begin
-            tx_id <= OBD_ID_RESP;
+            tx_id  <= OBD_ID_RESP;
             tx_dlc <= 4'd8;
-            if (resp_pid == 8'h0C) begin
-                tx_data <= {8'h04, 8'h41, 8'h0C, rpm_a, rpm_b, 8'h00, 8'h00, 8'h00};
-            end else if (resp_pid == 8'h0D) begin
-                tx_data <= {8'h03, 8'h41, 8'h0D, SPEED_KPH, 8'h00, 8'h00, 8'h00, 8'h00};
-            end else begin
-                tx_data <= 64'd0;
-            end
-            tx_start <= 1'b1;
+            case (resp_pid)
+                8'h00: tx_data <= {8'h06, 8'h41, 8'h00,
+                                   SUPPORTED_PIDS[31:24], SUPPORTED_PIDS[23:16],
+                                   SUPPORTED_PIDS[15:8],  SUPPORTED_PIDS[7:0],
+                                   8'h00};
+                8'h0C: tx_data <= {8'h04, 8'h41, 8'h0C, rpm_a, rpm_b,
+                                   8'h00, 8'h00, 8'h00};
+                8'h0D: tx_data <= {8'h03, 8'h41, 8'h0D, SPEED_KPH,
+                                   8'h00, 8'h00, 8'h00, 8'h00};
+                default: tx_data <= 64'd0;
+            endcase
+            tx_start     <= 1'b1;
             resp_pending <= 1'b0;
         end
     end
 end
 
+// =============================================
+// Debug UART Output (heartbeat + OBD debug)
+// =============================================
+// Heartbeat format: H<rx><edge><att><done><busy>\n  (7 bytes)
+//   rx    = CAN RX pin level ('0'/'1')
+//   edge  = any edge detected since last heartbeat ('0'/'1')
+//   att   = TX was attempted since last heartbeat ('0'/'1')
+//   done  = TX completed since last heartbeat ('0'/'1')
+//   busy  = TX currently busy right now ('0'/'1')
+//
+// OBD debug format: R<pid_byte>\n  (3 bytes, pid as raw hex)
 always @(posedge clk) begin
     if (reset) begin
-        dbg_pending <= 1'b0;
-        dbg_pid <= 8'd0;
-        dbg_start <= 1'b0;
-        dbg_byte <= 8'd0;
-        out_state <= 2'd0;
-        out_kind <= 2'd0;
-        hb_cnt <= 32'd0;
-        hb_pending <= 1'b0;
+        dbg_pending          <= 1'b0;
+        dbg_pid              <= 8'd0;
+        dbg_start            <= 1'b0;
+        dbg_byte             <= 8'd0;
+        out_state            <= 4'd0;
+        out_kind             <= 2'd0;
+        hb_cnt               <= 32'd0;
+        hb_pending           <= 1'b0;
+        can_rx_d1            <= 1'b1;
+        can_rx_d2            <= 1'b1;
+        rx_edge_seen_latched <= 1'b0;
+        tx_attempted         <= 1'b0;
+        tx_done_seen         <= 1'b0;
     end else begin
         dbg_start <= 1'b0;
-        if (hb_cnt == HB_INTERVAL - 1) begin
-            hb_cnt <= 32'd0;
+
+        // --- CAN RX edge detection ---
+        can_rx_d1 <= can_rx;
+        can_rx_d2 <= can_rx_d1;
+        if (can_rx_d1 != can_rx_d2) begin
+            rx_edge_seen_latched <= 1'b1;
+        end
+
+        // --- Track TX events ---
+        if (tx_start) begin
+            tx_attempted <= 1'b1;
+        end
+        if (tx_done) begin
+            tx_done_seen <= 1'b1;
+        end
+
+        // --- Heartbeat timer (1 second) ---
+        if (hb_cnt >= HB_INTERVAL - 1) begin
+            hb_cnt     <= 32'd0;
             hb_pending <= 1'b1;
         end else begin
             hb_cnt <= hb_cnt + 1'b1;
         end
+
+        // --- OBD request debug trigger ---
         if (rx_valid && is_obd_req && is_pid_supported) begin
             dbg_pending <= 1'b1;
-            dbg_pid <= rx_b2;
+            dbg_pid     <= rx_b2;
         end
 
+        // --- UART output state machine ---
         case (out_state)
-            2'd0: begin
-                if (!dbg_busy) begin
+            4'd0: begin // IDLE - pick message type
+                if (!dbg_busy && !dbg_start) begin
                     if (dbg_pending) begin
-                        out_kind <= 2'd1;
-                        dbg_byte <= 8'h52; // 'R'
+                        out_kind  <= 2'd1; // R-type
+                        dbg_byte  <= 8'h52; // 'R'
                         dbg_start <= 1'b1;
-                        out_state <= 2'd1;
+                        out_state <= 4'd1;
                     end else if (hb_pending) begin
-                        out_kind <= 2'd2;
-                        dbg_byte <= 8'h48; // 'H'
+                        out_kind  <= 2'd2; // H-type
+                        dbg_byte  <= 8'h48; // 'H'
                         dbg_start <= 1'b1;
-                        out_state <= 2'd1;
+                        out_state <= 4'd1;
                     end
                 end
             end
-            2'd1: begin
-                if (!dbg_busy) begin
+
+            4'd1: begin // Byte 2
+                if (!dbg_busy && !dbg_start) begin
                     if (out_kind == 2'd1) begin
-                        dbg_byte <= dbg_pid;
+                        // R-type: send PID byte (raw)
+                        dbg_byte  <= dbg_pid;
+                        dbg_start <= 1'b1;
+                        out_state <= 4'd7; // -> newline
                     end else begin
-                        dbg_byte <= 8'h42; // 'B'
+                        // H-type: send CAN RX level
+                        dbg_byte  <= can_rx_d2 ? 8'h31 : 8'h30;
+                        dbg_start <= 1'b1;
+                        out_state <= 4'd2;
                     end
-                    dbg_start <= 1'b1;
-                    out_state <= 2'd2;
                 end
             end
-            2'd2: begin
-                if (!dbg_busy) begin
-                    dbg_byte <= 8'h0A;
+
+            4'd2: begin // Byte 3 (H-type: edge_seen)
+                if (!dbg_busy && !dbg_start) begin
+                    dbg_byte  <= rx_edge_seen_latched ? 8'h31 : 8'h30;
                     dbg_start <= 1'b1;
-                    out_state <= 2'd3;
+                    out_state <= 4'd3;
                 end
             end
-            2'd3: begin
-                if (!dbg_busy) begin
-                    out_state <= 2'd0;
+
+            4'd3: begin // Byte 4 (H-type: tx_attempted)
+                if (!dbg_busy && !dbg_start) begin
+                    dbg_byte  <= tx_attempted ? 8'h31 : 8'h30;
+                    dbg_start <= 1'b1;
+                    out_state <= 4'd4;
+                end
+            end
+
+            4'd4: begin // Byte 5 (H-type: tx_done_seen)
+                if (!dbg_busy && !dbg_start) begin
+                    dbg_byte  <= tx_done_seen ? 8'h31 : 8'h30;
+                    dbg_start <= 1'b1;
+                    out_state <= 4'd5;
+                end
+            end
+
+            4'd5: begin // Byte 6 (H-type: tx_busy)
+                if (!dbg_busy && !dbg_start) begin
+                    dbg_byte  <= tx_busy ? 8'h31 : 8'h30;
+                    dbg_start <= 1'b1;
+                    out_state <= 4'd7; // -> newline
+                end
+            end
+
+            4'd7: begin // Newline (shared by R and H)
+                if (!dbg_busy && !dbg_start) begin
+                    dbg_byte  <= 8'h0A; // '\n'
+                    dbg_start <= 1'b1;
+                    out_state <= 4'd8;
+                end
+            end
+
+            4'd8: begin // Done - clear flags
+                if (!dbg_busy && !dbg_start) begin
+                    out_state <= 4'd0;
                     if (out_kind == 2'd1) begin
                         dbg_pending <= 1'b0;
                     end else begin
-                        hb_pending <= 1'b0;
+                        hb_pending           <= 1'b0;
+                        rx_edge_seen_latched <= 1'b0;
+                        tx_attempted         <= 1'b0;
+                        tx_done_seen         <= 1'b0;
                     end
                     out_kind <= 2'd0;
                 end
             end
+
             default: begin
-                out_state <= 2'd0;
-                out_kind <= 2'd0;
+                out_state <= 4'd0;
+                out_kind  <= 2'd0;
             end
         endcase
     end

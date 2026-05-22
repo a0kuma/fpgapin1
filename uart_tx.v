@@ -34,6 +34,7 @@ reg [1:0] state = S_IDLE;
 reg [BAUD_CNT_W-1:0] baud_cnt = {BAUD_CNT_W{1'b0}};
 reg [2:0] bit_idx = 3'd0;
 reg [7:0] shifter = 8'd0;
+reg stop_bit_cnt = 1'b0;
 wire baud_tick = (BAUD_DIV <= 1) ? 1'b1 : (baud_cnt == BAUD_DIV - 1);
 
 always @(posedge clk) begin
@@ -42,13 +43,14 @@ always @(posedge clk) begin
         baud_cnt <= {BAUD_CNT_W{1'b0}};
         bit_idx <= 3'd0;
         shifter <= 8'd0;
+        stop_bit_cnt <= 1'b0;
         tx_busy <= 1'b0;
         tx_line <= 1'b1;
     end else begin
         if (BAUD_DIV > 1) begin
-            if (baud_tick) begin
+            if (state != S_IDLE && baud_tick) begin
                 baud_cnt <= {BAUD_CNT_W{1'b0}};
-            end else begin
+            end else if (state != S_IDLE) begin
                 baud_cnt <= baud_cnt + 1'b1;
             end
         end
@@ -57,6 +59,8 @@ always @(posedge clk) begin
             S_IDLE: begin
                 tx_busy <= 1'b0;
                 tx_line <= 1'b1;
+                baud_cnt <= {BAUD_CNT_W{1'b0}};
+                stop_bit_cnt <= 1'b0;
                 if (tx_start) begin
                     shifter <= tx_data;
                     bit_idx <= 3'd0;
@@ -69,7 +73,7 @@ always @(posedge clk) begin
                 if (baud_tick) begin
                     tx_line <= shifter[0];
                     shifter <= {1'b0, shifter[7:1]};
-                    bit_idx <= 3'd1;
+                    bit_idx <= 3'd0;
                     state <= S_DATA;
                 end
             end
@@ -87,9 +91,13 @@ always @(posedge clk) begin
             end
             S_STOP: begin
                 if (baud_tick) begin
-                    tx_line <= 1'b1;
-                    tx_busy <= 1'b0;
-                    state <= S_IDLE;
+                    if (stop_bit_cnt == 1'b1) begin
+                        tx_line <= 1'b1;
+                        tx_busy <= 1'b0;
+                        state <= S_IDLE;
+                    end else begin
+                        stop_bit_cnt <= 1'b1;
+                    end
                 end
             end
             default: begin

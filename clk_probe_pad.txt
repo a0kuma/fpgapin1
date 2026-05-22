@@ -1,7 +1,7 @@
 Release 14.7 - par P.20131013 (lin64)
 Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
 
-Fri May 22 07:50:45 2026
+Fri May 22 09:02:38 2026
 
 
 INFO: The IO information is provided in three file formats as part of the Place and Route (PAR) process.  These formats are:
@@ -250,7 +250,7 @@ Pinout by Pin Number:
 |N12       |                  |IOBM     |IO_L13P_M1_2                 |UNUSED   |           |2             |          |         |           |         |         |          |           |                |
 |N13       |                  |         |GND                          |         |           |              |          |         |           |         |         |          |           |                |
 |N14       |                  |IOBS     |IO_L53N_VREF_1               |UNUSED   |           |1             |          |         |           |         |         |          |           |                |
-|N15       |uart_tx_can       |IOB      |IO_L50P_M1UDQS_1             |OUTPUT   |LVCMOS33   |1             |12        |SLOW     |           |         |         |LOCATED   |NO         |NONE            |
+|N15       |uart_tx_can       |IOB      |IO_L50P_M1UDQS_1             |INPUT    |LVCMOS33   |1             |          |         |           |NONE     |         |LOCATED   |NO         |NONE            |
 |N16       |                  |IOBS     |IO_L50N_M1UDQSN_1            |UNUSED   |           |1             |          |         |           |         |         |          |           |                |
 |N17       |                  |IOBM     |IO_L48P_HDC_M1DQ8_1          |UNUSED   |           |1             |          |         |           |         |         |          |           |                |
 |N18       |                  |IOBS     |IO_L48N_M1DQ9_1              |UNUSED   |           |1             |          |         |           |         |         |          |           |                |
@@ -268,7 +268,7 @@ Pinout by Pin Number:
 |P12       |                  |IOBS     |IO_L13N_D10_2                |UNUSED   |           |2             |          |         |           |         |         |          |           |                |
 |P13       |                  |         |CMPCS_B_2                    |         |           |              |          |         |           |         |         |          |           |                |
 |P14       |                  |         |VCCAUX                       |         |           |              |          |         |           |         |2.5      |          |           |                |
-|P15       |uart_rx_can       |IOB      |IO_L74P_AWAKE_1              |INPUT    |LVCMOS33   |1             |          |         |           |NONE     |         |LOCATED   |NO         |NONE            |
+|P15       |uart_rx_can       |IOB      |IO_L74P_AWAKE_1              |OUTPUT   |LVCMOS33   |1             |12        |SLOW     |           |         |         |LOCATED   |NO         |NONE            |
 |P16       |uart_rx_cp2102    |IOB      |IO_L74N_DOUT_BUSY_1          |INPUT    |LVCMOS33   |1             |          |         |           |NONE     |         |LOCATED   |NO         |NONE            |
 |P17       |                  |IOBM     |IO_L49P_M1DQ10_1             |UNUSED   |           |1             |          |         |           |         |         |          |           |                |
 |P18       |                  |IOBS     |IO_L49N_M1DQ11_1             |UNUSED   |           |1             |          |         |           |         |         |          |           |                |
