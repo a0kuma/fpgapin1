@@ -71,8 +71,22 @@ reg can_rx_d1 = 1'b1;
 reg can_rx_d2 = 1'b1;
 reg rx_edge_seen_latched = 1'b0;
 
+wire core_debug_rx_start;
+wire core_debug_rx_ack_slot;
+wire core_debug_rx_crc_ok;
+wire core_debug_rx_crc_error;
+wire core_debug_rx_stuff_error;
+wire core_debug_tx_ack_seen;
+
+reg core_rx_start_seen = 1'b0;
+reg core_rx_ack_seen = 1'b0;
+reg core_rx_crc_ok_seen = 1'b0;
+reg core_rx_crc_error_seen = 1'b0;
+reg core_rx_stuff_error_seen = 1'b0;
+
 // TX event tracking (cleared each heartbeat)
 reg tx_attempted = 1'b0;
+reg tx_ack_seen_latched = 1'b0;
 reg tx_done_seen = 1'b0;
 
 // Heartbeat timer (1 second)
@@ -80,7 +94,8 @@ localparam integer HB_INTERVAL = CLK_HZ;
 reg [31:0] hb_cnt     = 32'd0;
 reg        hb_pending = 1'b0;
 
-// Periodic test TX timer (2 seconds) - loopback diagnostic
+// Periodic test TX timer (2 seconds) - bus ACK diagnostic
+localparam TEST_TX_ENABLE = 1'b1;
 localparam integer TEST_TX_INTERVAL = CLK_HZ * 2;
 reg [31:0] test_tx_cnt = 32'd0;
 
@@ -104,7 +119,13 @@ can_simple_controller #(
     .rx_valid(rx_valid),
     .rx_id(rx_id),
     .rx_dlc(rx_dlc),
-    .rx_data(rx_data)
+    .rx_data(rx_data),
+    .debug_rx_start(core_debug_rx_start),
+    .debug_rx_ack_slot(core_debug_rx_ack_slot),
+    .debug_rx_crc_ok(core_debug_rx_crc_ok),
+    .debug_rx_crc_error(core_debug_rx_crc_error),
+    .debug_rx_stuff_error(core_debug_rx_stuff_error),
+    .debug_tx_ack_seen(core_debug_tx_ack_seen)
 );
 
 // =============================================
@@ -129,31 +150,29 @@ always @(posedge clk) begin
     if (reset) begin
         resp_pending <= 1'b0;
         resp_pid     <= 8'd0;
+        tx_start     <= 1'b0;
+        tx_id        <= 11'd0;
+        tx_dlc       <= 4'd0;
+        tx_data      <= 64'd0;
         test_tx_cnt  <= 32'd0;
     end else begin
-        // --- Periodic test TX (every 2 seconds) ---
-        // Sends a dummy CAN frame to test transceiver loopback.
-        // If the SN65HVD230 is working, we should see edges on can_rx.
-        if (test_tx_cnt >= TEST_TX_INTERVAL - 1) begin
+        tx_start <= 1'b0;
+
+        if (TEST_TX_ENABLE && test_tx_cnt >= TEST_TX_INTERVAL - 1) begin
             test_tx_cnt <= 32'd0;
             if (!resp_pending && !tx_busy) begin
                 resp_pending <= 1'b1;
-                resp_pid     <= 8'h0C; // Test with RPM response
+                resp_pid     <= 8'h0C;
             end
         end else begin
             test_tx_cnt <= test_tx_cnt + 1'b1;
         end
 
-        // --- Real OBD request detection (overrides test) ---
         if (rx_valid && is_obd_req && is_pid_supported) begin
-            if (!resp_pending) begin
-                resp_pending <= 1'b1;
-                resp_pid     <= rx_b2;
-            end
+            resp_pending <= 1'b1;
+            resp_pid     <= rx_b2;
         end
 
-        // --- TX response construction ---
-        tx_start <= 1'b0;
         if (resp_pending && !tx_busy) begin
             tx_id  <= OBD_ID_RESP;
             tx_dlc <= 4'd8;
@@ -177,12 +196,18 @@ end
 // =============================================
 // Debug UART Output (heartbeat + OBD debug)
 // =============================================
-// Heartbeat format: H<rx><edge><att><done><busy>\n  (7 bytes)
-//   rx    = CAN RX pin level ('0'/'1')
-//   edge  = any edge detected since last heartbeat ('0'/'1')
-//   att   = TX was attempted since last heartbeat ('0'/'1')
-//   done  = TX completed since last heartbeat ('0'/'1')
-//   busy  = TX currently busy right now ('0'/'1')
+// Heartbeat format: H<rx><edge><sof><ack><ok><crc_err><stuff><att><tx_ack><done><busy>\n
+//   rx      = CAN RX pin level ('0'/'1')
+//   edge    = any edge detected since last heartbeat ('0'/'1')
+//   sof     = receiver saw a start-of-frame edge ('0'/'1')
+//   ack     = receiver reached the ACK slot ('0'/'1')
+//   ok      = receiver saw a CRC-valid standard data frame ('0'/'1')
+//   crc_err = receiver saw a CRC/format-rejected frame ('0'/'1')
+//   stuff   = receiver saw a bit-stuffing error ('0'/'1')
+//   att     = TX was attempted since last heartbeat ('0'/'1')
+//   tx_ack  = another CAN node ACKed our transmitted frame ('0'/'1')
+//   done    = TX completed since last heartbeat ('0'/'1')
+//   busy    = TX currently busy right now ('0'/'1')
 //
 // OBD debug format: R<pid_byte>\n  (3 bytes, pid as raw hex)
 always @(posedge clk) begin
@@ -197,9 +222,15 @@ always @(posedge clk) begin
         hb_pending           <= 1'b0;
         can_rx_d1            <= 1'b1;
         can_rx_d2            <= 1'b1;
-        rx_edge_seen_latched <= 1'b0;
-        tx_attempted         <= 1'b0;
-        tx_done_seen         <= 1'b0;
+        rx_edge_seen_latched     <= 1'b0;
+        core_rx_start_seen      <= 1'b0;
+        core_rx_ack_seen        <= 1'b0;
+        core_rx_crc_ok_seen     <= 1'b0;
+        core_rx_crc_error_seen  <= 1'b0;
+        core_rx_stuff_error_seen <= 1'b0;
+        tx_attempted            <= 1'b0;
+        tx_ack_seen_latched     <= 1'b0;
+        tx_done_seen            <= 1'b0;
     end else begin
         dbg_start <= 1'b0;
 
@@ -210,9 +241,29 @@ always @(posedge clk) begin
             rx_edge_seen_latched <= 1'b1;
         end
 
+        // --- Track CAN RX parser events ---
+        if (core_debug_rx_start) begin
+            core_rx_start_seen <= 1'b1;
+        end
+        if (core_debug_rx_ack_slot) begin
+            core_rx_ack_seen <= 1'b1;
+        end
+        if (core_debug_rx_crc_ok) begin
+            core_rx_crc_ok_seen <= 1'b1;
+        end
+        if (core_debug_rx_crc_error) begin
+            core_rx_crc_error_seen <= 1'b1;
+        end
+        if (core_debug_rx_stuff_error) begin
+            core_rx_stuff_error_seen <= 1'b1;
+        end
+
         // --- Track TX events ---
         if (tx_start) begin
             tx_attempted <= 1'b1;
+        end
+        if (core_debug_tx_ack_seen) begin
+            tx_ack_seen_latched <= 1'b1;
         end
         if (tx_done) begin
             tx_done_seen <= 1'b1;
@@ -274,23 +325,71 @@ always @(posedge clk) begin
                 end
             end
 
-            4'd3: begin // Byte 4 (H-type: tx_attempted)
+            4'd3: begin // Byte 4 (H-type: SOF seen)
                 if (!dbg_busy && !dbg_start) begin
-                    dbg_byte  <= tx_attempted ? 8'h31 : 8'h30;
+                    dbg_byte  <= core_rx_start_seen ? 8'h31 : 8'h30;
                     dbg_start <= 1'b1;
                     out_state <= 4'd4;
                 end
             end
 
-            4'd4: begin // Byte 5 (H-type: tx_done_seen)
+            4'd4: begin // Byte 5 (H-type: ACK slot reached)
                 if (!dbg_busy && !dbg_start) begin
-                    dbg_byte  <= tx_done_seen ? 8'h31 : 8'h30;
+                    dbg_byte  <= core_rx_ack_seen ? 8'h31 : 8'h30;
                     dbg_start <= 1'b1;
                     out_state <= 4'd5;
                 end
             end
 
-            4'd5: begin // Byte 6 (H-type: tx_busy)
+            4'd5: begin // Byte 6 (H-type: CRC OK)
+                if (!dbg_busy && !dbg_start) begin
+                    dbg_byte  <= core_rx_crc_ok_seen ? 8'h31 : 8'h30;
+                    dbg_start <= 1'b1;
+                    out_state <= 4'd6;
+                end
+            end
+
+            4'd6: begin // Byte 7 (H-type: CRC error)
+                if (!dbg_busy && !dbg_start) begin
+                    dbg_byte  <= core_rx_crc_error_seen ? 8'h31 : 8'h30;
+                    dbg_start <= 1'b1;
+                    out_state <= 4'd9;
+                end
+            end
+
+            4'd9: begin // Byte 8 (H-type: stuff error)
+                if (!dbg_busy && !dbg_start) begin
+                    dbg_byte  <= core_rx_stuff_error_seen ? 8'h31 : 8'h30;
+                    dbg_start <= 1'b1;
+                    out_state <= 4'd10;
+                end
+            end
+
+            4'd10: begin // Byte 9 (H-type: tx_attempted)
+                if (!dbg_busy && !dbg_start) begin
+                    dbg_byte  <= tx_attempted ? 8'h31 : 8'h30;
+                    dbg_start <= 1'b1;
+                    out_state <= 4'd11;
+                end
+            end
+
+            4'd11: begin // Byte 10 (H-type: tx_ack_seen)
+                if (!dbg_busy && !dbg_start) begin
+                    dbg_byte  <= tx_ack_seen_latched ? 8'h31 : 8'h30;
+                    dbg_start <= 1'b1;
+                    out_state <= 4'd12;
+                end
+            end
+
+            4'd12: begin // Byte 11 (H-type: tx_done_seen)
+                if (!dbg_busy && !dbg_start) begin
+                    dbg_byte  <= tx_done_seen ? 8'h31 : 8'h30;
+                    dbg_start <= 1'b1;
+                    out_state <= 4'd13;
+                end
+            end
+
+            4'd13: begin // Byte 12 (H-type: tx_busy)
                 if (!dbg_busy && !dbg_start) begin
                     dbg_byte  <= tx_busy ? 8'h31 : 8'h30;
                     dbg_start <= 1'b1;
@@ -312,10 +411,16 @@ always @(posedge clk) begin
                     if (out_kind == 2'd1) begin
                         dbg_pending <= 1'b0;
                     end else begin
-                        hb_pending           <= 1'b0;
-                        rx_edge_seen_latched <= 1'b0;
-                        tx_attempted         <= 1'b0;
-                        tx_done_seen         <= 1'b0;
+                        hb_pending              <= 1'b0;
+                        rx_edge_seen_latched    <= 1'b0;
+                        core_rx_start_seen      <= 1'b0;
+                        core_rx_ack_seen        <= 1'b0;
+                        core_rx_crc_ok_seen     <= 1'b0;
+                        core_rx_crc_error_seen  <= 1'b0;
+                        core_rx_stuff_error_seen <= 1'b0;
+                        tx_attempted            <= 1'b0;
+                        tx_ack_seen_latched     <= 1'b0;
+                        tx_done_seen            <= 1'b0;
                     end
                     out_kind <= 2'd0;
                 end

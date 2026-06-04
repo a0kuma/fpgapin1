@@ -17,7 +17,13 @@ module can_simple_controller #(
     output reg  rx_valid,
     output reg  [10:0] rx_id,
     output reg  [3:0] rx_dlc,
-    output reg  [63:0] rx_data
+    output reg  [63:0] rx_data,
+    output wire debug_rx_start,
+    output wire debug_rx_ack_slot,
+    output wire debug_rx_crc_ok,
+    output wire debug_rx_crc_error,
+    output wire debug_rx_stuff_error,
+    output wire debug_tx_ack_seen
 );
 
 function integer clog2;
@@ -94,6 +100,8 @@ wire bit_end_tick = tq_tick && (tq_cnt == TQ_PER_BIT - 1);
 wire rx_start_pulse;
 wire tx_start_pulse;
 wire hard_sync_pulse;
+wire rx_crc_last_sample;
+wire rx_crc_match_now;
 
 reg [1:0] idle_cnt = 2'd0;
 wire bus_idle = (idle_cnt == 2'd3);
@@ -147,6 +155,14 @@ assign tx_busy = tx_pending || tx_active || prep_active;
 assign rx_start_pulse = (rx_state == RX_IDLE) && !tx_active && can_rx_fall;
 assign tx_start_pulse = (!tx_active && tx_pending && bus_idle && rx_state == RX_IDLE && bit_end_tick);
 assign hard_sync_pulse = rx_start_pulse || tx_start_pulse;
+assign rx_crc_last_sample = sample_tick && (rx_state == RX_CRC) && (rx_bit_cnt == 5'd14);
+assign rx_crc_match_now = ({rx_crc_recv[13:0], can_rx_s} == rx_crc) && (rx_ide == 1'b0) && (rx_rtr == 1'b0) && !rx_stuff_error;
+assign debug_rx_start = rx_start_pulse;
+assign debug_rx_ack_slot = sample_tick && (rx_state == RX_ACK);
+assign debug_rx_crc_ok = rx_crc_last_sample && rx_crc_match_now;
+assign debug_rx_crc_error = rx_crc_last_sample && !rx_crc_match_now;
+assign debug_rx_stuff_error = rx_stuff_error;
+assign debug_tx_ack_seen = tx_ack_seen;
 
 reg drive_ack = 1'b0;
 always @(posedge clk) begin
