@@ -43,7 +43,7 @@ obd_can_node #(
     .uart_tx(dbg_uart_tx)
 );
 
-// SWAPPED pin mapping: N15 = CAN RX input, P15 = CAN TX output
+// CORRECT pin mapping (verified via loopback): N15=CAN RX, P15=CAN TX
 assign uart_rx_can = can_tx;
 assign uart_tx_cp2102_inv = ~dbg_uart_tx;
 assign slow_blink_clk_led = cnt[27];

@@ -1,7 +1,7 @@
 Release 14.7 par P.20131013 (lin64)
 Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
 
-140.112.31.164::  Fri May 22 09:02:34 2026
+140.112.31.164::  Thu Jun 04 09:12:26 2026
 
 par -w -intstyle ise -ol high -mt off clk_probe_map.ncd clk_probe.ncd
 clk_probe.pcf 
@@ -110,15 +110,15 @@ Phase  4  : 2370 unrouted; (Par is working to improve performance)     REAL time
 
 Updating file: clk_probe.ncd with current fully routed design.
 
-Phase  5  : 0 unrouted; (Par is working to improve performance)     REAL time: 3 secs 
+Phase  5  : 0 unrouted; (Par is working to improve performance)     REAL time: 2 secs 
 
-Phase  6  : 0 unrouted; (Par is working to improve performance)     REAL time: 3 secs 
+Phase  6  : 0 unrouted; (Par is working to improve performance)     REAL time: 2 secs 
 
-Phase  7  : 0 unrouted; (Par is working to improve performance)     REAL time: 3 secs 
+Phase  7  : 0 unrouted; (Par is working to improve performance)     REAL time: 2 secs 
 
-Phase  8  : 0 unrouted; (Par is working to improve performance)     REAL time: 3 secs 
+Phase  8  : 0 unrouted; (Par is working to improve performance)     REAL time: 2 secs 
 
-Phase  9  : 0 unrouted; (Par is working to improve performance)     REAL time: 3 secs 
+Phase  9  : 0 unrouted; (Par is working to improve performance)     REAL time: 2 secs 
 
 Phase 10  : 0 unrouted; (Par is working to improve performance)     REAL time: 3 secs 
 Total REAL time to Router completion: 3 secs 
