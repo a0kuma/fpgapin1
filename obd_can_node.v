@@ -95,7 +95,7 @@ reg [31:0] hb_cnt     = 32'd0;
 reg        hb_pending = 1'b0;
 
 // Periodic test TX timer (2 seconds) - bus ACK diagnostic
-localparam TEST_TX_ENABLE = 1'b1;
+localparam TEST_TX_ENABLE = 1'b0;
 localparam integer TEST_TX_INTERVAL = CLK_HZ * 2;
 reg [31:0] test_tx_cnt = 32'd0;
 
